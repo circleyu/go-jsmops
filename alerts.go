@@ -85,7 +85,7 @@ func (manager *alertsManager) AddAlertNote(data *alert.AddNoteRequest) (*alert.S
 func (manager *alertsManager) ListAlerts(data *alert.ListAlertsRequest, query *querybuilder.Query) (*alert.ListAlertsResult, error) {
 	output := &alert.ListAlertsResult{}
 
-	_, err := manager.get(endpoints.alerts.ListAlerts, output, query)
+	_, err := manager.get(endpoints.alerts.ListAlerts, output, data.RequestParams())
 	if err != nil {
 		return nil, err
 	}

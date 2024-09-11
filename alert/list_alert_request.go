@@ -1,8 +1,9 @@
 package alert
 
 import (
-	"net/http"
 	"strconv"
+
+	"github.com/circleyu/go-jsmops/querybuilder"
 )
 
 type ListAlertsRequest struct {
@@ -15,51 +16,36 @@ type ListAlertsRequest struct {
 	SearchIdentifierType SearchIdentifierType
 }
 
-func (r *ListAlertsRequest) Validate() error {
-
-	return nil
-}
-
-func (r *ListAlertsRequest) ResourcePath() string {
-
-	return "v1/alerts"
-}
-
-func (r *ListAlertsRequest) Method() string {
-	return http.MethodGet
-}
-
-func (r *ListAlertsRequest) RequestParams() map[string]string {
-
-	params := make(map[string]string)
+func (r *ListAlertsRequest) RequestParams() *querybuilder.Query {
+	query := querybuilder.BuildQuery()
 
 	if r.Limit != 0 {
-		params["limit"] = strconv.Itoa(r.Limit)
+		query.Is("limit", strconv.Itoa(r.Limit))
 	}
 
 	if r.Sort != "" {
-		params["sort"] = string(r.Sort)
+		query.Is("sort", string(r.Sort))
 	}
 
 	if r.Offset != 0 {
-		params["offset"] = strconv.Itoa(r.Offset)
+		query.Is("offset", strconv.Itoa(r.Offset))
 	}
 
 	if r.Query != "" {
-		params["query"] = r.Query
+		query.Is("query", r.Query)
 	}
 
 	if r.SearchIdentifier != "" {
-		params["searchIdentifier"] = r.SearchIdentifier
+		query.Is("searchIdentifier", r.SearchIdentifier)
 	}
 
 	if r.SearchIdentifierType != "" {
-		params["searchIdentifierType"] = string(r.SearchIdentifierType)
+		query.Is("searchIdentifierType", string(r.SearchIdentifierType))
 	}
 
 	if r.Order != "" {
-		params["order"] = string(r.Order)
+		query.Is("order", string(r.Order))
 	}
 
-	return params
+	return query
 }

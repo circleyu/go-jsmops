@@ -2,7 +2,6 @@ package alert
 
 import (
 	"errors"
-	"net/http"
 )
 
 type CreateAlertRequest struct {
@@ -26,13 +25,4 @@ func (r *CreateAlertRequest) Validate() error {
 		return errors.New("message can not be empty")
 	}
 	return nil
-}
-
-func (r *CreateAlertRequest) ResourcePath() string {
-
-	return "v1/alerts"
-}
-
-func (r *CreateAlertRequest) Method() string {
-	return http.MethodPost
 }
