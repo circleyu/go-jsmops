@@ -1,0 +1,34 @@
+package alert
+
+import (
+	"github.com/pkg/errors"
+)
+
+type AcknowledgeAlertRequest struct {
+	IdentifierType  AlertIdentifier
+	IdentifierValue string
+}
+
+func (r *AcknowledgeAlertRequest) Validate() error {
+	if r.IdentifierValue == "" {
+		return errors.New("Identifier can not be empty")
+	}
+	return nil
+}
+
+func (r *AcknowledgeAlertRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
+}
