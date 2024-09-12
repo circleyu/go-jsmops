@@ -31,7 +31,7 @@ func (manager *alertsManager) CreateAlert(data *alert.CreateAlertRequest) (*aler
 	if err != nil {
 		return nil, err
 	}
-	err = manager.post(endpoints.alerts.CreateAlert, jsonb, output, nil, http.StatusOK)
+	err = manager.postJSON(endpoints.alerts.CreateAlert, jsonb, output, nil, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}
@@ -41,11 +41,7 @@ func (manager *alertsManager) CreateAlert(data *alert.CreateAlertRequest) (*aler
 
 func (manager *alertsManager) AcknowledgeAlert(data *alert.AcknowledgeAlertRequest) (*alert.SuccessResponse, error) {
 	output := &alert.SuccessResponse{}
-	jsonb, err := json.Marshal(data)
-	if err != nil {
-		return nil, err
-	}
-	err = manager.post(endpoints.alerts.AcknowledgeAlert(data.IdentifierValue), jsonb, output, nil, http.StatusAccepted)
+	err := manager.post(endpoints.alerts.AcknowledgeAlert(data.IdentifierValue), nil, output, nil, http.StatusAccepted)
 	if err != nil {
 		return nil, err
 	}
@@ -55,11 +51,7 @@ func (manager *alertsManager) AcknowledgeAlert(data *alert.AcknowledgeAlertReque
 
 func (manager *alertsManager) CloseAlert(data *alert.CloseAlertRequest) (*alert.SuccessResponse, error) {
 	output := &alert.SuccessResponse{}
-	jsonb, err := json.Marshal(data)
-	if err != nil {
-		return nil, err
-	}
-	err = manager.post(endpoints.alerts.CloseAlert(data.IdentifierValue), jsonb, output, nil, http.StatusAccepted)
+	err := manager.post(endpoints.alerts.CloseAlert(data.IdentifierValue), nil, output, nil, http.StatusAccepted)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +65,7 @@ func (manager *alertsManager) AddAlertNote(data *alert.AddNoteRequest) (*alert.S
 	if err != nil {
 		return nil, err
 	}
-	err = manager.post(endpoints.alerts.CreateAlert, jsonb, output, nil, http.StatusOK)
+	err = manager.postJSON(endpoints.alerts.CreateAlert, jsonb, output, nil, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}

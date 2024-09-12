@@ -13,25 +13,22 @@ import (
 
 const httpClientTimeout = time.Second * 30
 
-func (c *APIClient) postJSON(path string, requestBody []byte, out interface{}, expectedStatus ...int) error {
-	return c.post(path, requestBody, out, nil, expectedStatus...)
+func (c *APIClient) postJSON(path string, requestBody []byte, out interface{}, params *params.Params, expectedStatus ...int) error {
+	return c.post(path, bytes.NewReader(requestBody), out, params, expectedStatus...)
 }
 
-func (c *APIClient) post(path string, requestBody []byte, out interface{}, params *params.Params, expectedStatus ...int) error {
+func (c *APIClient) post(path string, body io.Reader, out interface{}, params *params.Params, expectedStatus ...int) error {
 	httpClient := &http.Client{
 		Timeout: httpClientTimeout,
-	}
-	if c.logger != nil && c.logLevel >= LogDebug {
-		c.logger.Debug(string(requestBody))
 	}
 
 	var req *http.Request
 	var err error
 
 	if params != nil {
-		req, err = http.NewRequest("POST", fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s?%s", c.cloudID, path, params.URLSafe()), nil)
+		req, err = http.NewRequest("POST", fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s?%s", c.cloudID, path, params.URLSafe()), body)
 	} else {
-		req, err = http.NewRequest("POST", fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", c.cloudID, path), nil)
+		req, err = http.NewRequest("POST", fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", c.cloudID, path), body)
 	}
 
 	req.SetBasicAuth(c.userName, c.apiToken)
