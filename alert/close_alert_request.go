@@ -1,6 +1,7 @@
 package alert
 
 import (
+	"github.com/circleyu/go-jsmops/params"
 	"github.com/pkg/errors"
 )
 
@@ -16,19 +17,18 @@ func (r *CloseAlertRequest) Validate() error {
 	return nil
 }
 
-func (r *CloseAlertRequest) RequestParams() map[string]string {
-
-	params := make(map[string]string)
+func (r *CloseAlertRequest) RequestParams() *params.Params {
+	query := params.Build()
 
 	if r.IdentifierType == ALIAS {
-		params["identifierType"] = "alias"
+		query.Is("identifierType", "alias")
 
 	} else if r.IdentifierType == TINYID {
-		params["identifierType"] = "tiny"
+		query.Is("identifierType", "tiny")
 
 	} else {
-		params["identifierType"] = "id"
+		query.Is("identifierType", "id")
 
 	}
-	return params
+	return query
 }

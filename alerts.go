@@ -5,12 +5,11 @@ import (
 	"net/http"
 
 	"github.com/circleyu/go-jsmops/alert"
-	"github.com/circleyu/go-jsmops/querybuilder"
 )
 
 type AlertsManager interface {
 	CreateAlert(*alert.CreateAlertRequest) (*alert.SuccessResponse, error)
-	ListAlerts(*alert.ListAlertsRequest, *querybuilder.Query) (*alert.ListAlertsResult, error)
+	ListAlerts(*alert.ListAlertsRequest) (*alert.ListAlertsResult, error)
 	AcknowledgeAlert(*alert.AcknowledgeAlertRequest) (*alert.SuccessResponse, error)
 	CloseAlert(*alert.CloseAlertRequest) (*alert.SuccessResponse, error)
 	AddAlertNote(*alert.AddNoteRequest) (*alert.SuccessResponse, error)
@@ -32,7 +31,7 @@ func (manager *alertsManager) CreateAlert(data *alert.CreateAlertRequest) (*aler
 	if err != nil {
 		return nil, err
 	}
-	err = manager.postJSON(endpoints.alerts.CreateAlert, jsonb, output, http.StatusOK)
+	err = manager.post(endpoints.alerts.CreateAlert, jsonb, output, nil, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +45,7 @@ func (manager *alertsManager) AcknowledgeAlert(data *alert.AcknowledgeAlertReque
 	if err != nil {
 		return nil, err
 	}
-	err = manager.postJSON(endpoints.alerts.AcknowledgeAlert(data.IdentifierValue), jsonb, output, http.StatusAccepted)
+	err = manager.post(endpoints.alerts.AcknowledgeAlert(data.IdentifierValue), jsonb, output, nil, http.StatusAccepted)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +59,7 @@ func (manager *alertsManager) CloseAlert(data *alert.CloseAlertRequest) (*alert.
 	if err != nil {
 		return nil, err
 	}
-	err = manager.postJSON(endpoints.alerts.CloseAlert(data.IdentifierValue), jsonb, output, http.StatusAccepted)
+	err = manager.post(endpoints.alerts.CloseAlert(data.IdentifierValue), jsonb, output, nil, http.StatusAccepted)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +73,7 @@ func (manager *alertsManager) AddAlertNote(data *alert.AddNoteRequest) (*alert.S
 	if err != nil {
 		return nil, err
 	}
-	err = manager.postJSON(endpoints.alerts.CreateAlert, jsonb, output, http.StatusOK)
+	err = manager.post(endpoints.alerts.CreateAlert, jsonb, output, nil, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +81,7 @@ func (manager *alertsManager) AddAlertNote(data *alert.AddNoteRequest) (*alert.S
 	return output, nil
 }
 
-func (manager *alertsManager) ListAlerts(data *alert.ListAlertsRequest, query *querybuilder.Query) (*alert.ListAlertsResult, error) {
+func (manager *alertsManager) ListAlerts(data *alert.ListAlertsRequest) (*alert.ListAlertsResult, error) {
 	output := &alert.ListAlertsResult{}
 
 	_, err := manager.get(endpoints.alerts.ListAlerts, output, data.RequestParams())

@@ -3,7 +3,7 @@ package alert
 import (
 	"strconv"
 
-	"github.com/circleyu/go-jsmops/querybuilder"
+	"github.com/circleyu/go-jsmops/params"
 )
 
 type ListAlertsRequest struct {
@@ -16,8 +16,8 @@ type ListAlertsRequest struct {
 	SearchIdentifierType SearchIdentifierType
 }
 
-func (r *ListAlertsRequest) RequestParams() *querybuilder.Query {
-	query := querybuilder.BuildQuery()
+func (r *ListAlertsRequest) RequestParams() *params.Params {
+	query := params.Build()
 
 	if r.Limit != 0 {
 		query.Is("limit", strconv.Itoa(r.Limit))

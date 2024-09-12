@@ -44,9 +44,9 @@ type ListAlertResponseLink struct {
 }
 
 type SuccessResponse struct {
-	Result    string `json:"result"`
-	RequestID string `json:"requestId"`
-	Took      int    `json:"took"`
+	Result    string  `json:"result"`
+	RequestID string  `json:"requestId"`
+	Took      float32 `json:"took"`
 }
 
 type AddNoteResponse struct {
