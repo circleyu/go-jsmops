@@ -12,12 +12,38 @@ import (
 
 // APIClient ...
 type APIClient struct {
-	cloudID  string
-	userName string
-	apiToken string
-	logLevel LogLevel
-	logger   *logrus.Logger
-	Alert    AlertsManager
+	cloudID               string
+	userName              string
+	apiToken              string
+	logLevel              LogLevel
+	logger                *logrus.Logger
+	Alert                 AlertsManager
+	AuditLogs             AuditLogsManager
+	Contacts              ContactsManager
+	Teams                 TeamsManager
+	Roles                 RolesManager
+	Escalations           EscalationsManager
+	ForwardingRules       ForwardingRulesManager
+	Heartbeats            HeartbeatsManager
+	Integrations          IntegrationsManager
+	IntegrationActions    IntegrationActionsManager
+	IntegrationFilters    IntegrationFiltersManager
+	Maintenances          MaintenancesManager
+	NotificationRules     NotificationRulesManager
+	NotificationRuleSteps NotificationRuleStepsManager
+	Policies              PoliciesManager
+	TeamPolicies          TeamPoliciesManager
+	TeamRoles             TeamRolesManager
+	RoutingRules          RoutingRulesManager
+	Schedules             SchedulesManager
+	SchedulesOnCalls      SchedulesOnCallsManager
+	SchedulesOverrides    SchedulesOverridesManager
+	SchedulesRotations    SchedulesRotationsManager
+	SchedulesTimelines    SchedulesTimelinesManager
+	Syncs                 SyncsManager
+	SyncsActions          SyncsActionsManager
+	SyncsActionGroups     SyncsActionGroupsManager
+	JEC                   JECManager
 }
 
 type LogLevel int
@@ -61,6 +87,32 @@ func Init(cloudID, apiToken, userName string, options *ClientOptions) *APIClient
 	}
 
 	client.Alert = newAlertsManager(client)
+	client.AuditLogs = newAuditLogsManager(client)
+	client.Contacts = newContactsManager(client)
+	client.Teams = newTeamsManager(client)
+	client.Roles = newRolesManager(client)
+	client.Escalations = newEscalationsManager(client)
+	client.ForwardingRules = newForwardingRulesManager(client)
+	client.Heartbeats = newHeartbeatsManager(client)
+	client.Integrations = newIntegrationsManager(client)
+	client.IntegrationActions = newIntegrationActionsManager(client)
+	client.IntegrationFilters = newIntegrationFiltersManager(client)
+	client.Maintenances = newMaintenancesManager(client)
+	client.NotificationRules = newNotificationRulesManager(client)
+	client.NotificationRuleSteps = newNotificationRuleStepsManager(client)
+	client.Policies = newPoliciesManager(client)
+	client.TeamPolicies = newTeamPoliciesManager(client)
+	client.TeamRoles = newTeamRolesManager(client)
+	client.RoutingRules = newRoutingRulesManager(client)
+	client.Schedules = newSchedulesManager(client)
+	client.SchedulesOnCalls = newSchedulesOnCallsManager(client)
+	client.SchedulesOverrides = newSchedulesOverridesManager(client)
+	client.SchedulesRotations = newSchedulesRotationsManager(client)
+	client.SchedulesTimelines = newSchedulesTimelinesManager(client)
+	client.Syncs = newSyncsManager(client)
+	client.SyncsActions = newSyncsActionsManager(client)
+	client.SyncsActionGroups = newSyncsActionGroupsManager(client)
+	client.JEC = newJECManager(client)
 
 	return client
 }

@@ -56,3 +56,36 @@ type AddNoteResponse struct {
 	Note      string    `json:"note,omitempty"`
 	Owner     string    `json:"owner,omitempty"`
 }
+
+type AlertNote struct {
+	ID        string    `json:"id,omitempty"`
+	CreatedAt time.Time `json:"createdAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty"`
+	Note      string    `json:"note,omitempty"`
+	Owner     string    `json:"owner,omitempty"`
+}
+
+type ListAlertNotesResult struct {
+	Links ListAlertResponseLink `json:"links"`
+	Notes []AlertNote           `json:"values"`
+	Count int                   `json:"count"`
+}
+
+type AlertLog struct {
+	Log       string    `json:"log,omitempty"`
+	LogType   string    `json:"logType,omitempty"`
+	Owner     string    `json:"owner,omitempty"`
+	CreatedAt time.Time `json:"createdAt,omitempty"`
+}
+
+type ListAlertLogsResult struct {
+	Links ListAlertResponseLink `json:"links"`
+	Logs  []AlertLog            `json:"values"`
+	Count int                   `json:"count"`
+}
+
+type RequestStatusResponse struct {
+	Status    string `json:"status,omitempty"`
+	RequestID string `json:"requestId,omitempty"`
+	Alert     *Alert `json:"alert,omitempty"`
+}
