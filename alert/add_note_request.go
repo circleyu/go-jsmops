@@ -24,15 +24,13 @@ func (r *AddNoteRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if r.IdentifierType == ALIAS {
+	switch r.IdentifierType {
+	case ALIAS:
 		params["identifierType"] = "alias"
-
-	} else if r.IdentifierType == TINYID {
+	case TINYID:
 		params["identifierType"] = "tiny"
-
-	} else {
+	default:
 		params["identifierType"] = "id"
-
 	}
 	return params
 }

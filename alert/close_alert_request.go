@@ -20,15 +20,13 @@ func (r *CloseAlertRequest) Validate() error {
 func (r *CloseAlertRequest) RequestParams() *params.Params {
 	query := params.Build()
 
-	if r.IdentifierType == ALIAS {
+	switch r.IdentifierType {
+	case ALIAS:
 		query.Is("identifierType", "alias")
-
-	} else if r.IdentifierType == TINYID {
+	case TINYID:
 		query.Is("identifierType", "tiny")
-
-	} else {
+	default:
 		query.Is("identifierType", "id")
-
 	}
 	return query
 }
