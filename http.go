@@ -30,6 +30,9 @@ func (c *APIClient) post(path string, body io.Reader, out interface{}, params *p
 	} else {
 		req, err = http.NewRequest("POST", fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", c.cloudID, path), body)
 	}
+	if err != nil {
+		return err
+	}
 
 	req.SetBasicAuth(c.userName, c.apiToken)
 	req.Header.Add("Content-type", "application/json")
