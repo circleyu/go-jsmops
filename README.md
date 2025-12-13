@@ -2,6 +2,8 @@
 
 一個簡單易用的 Go 語言庫，用於調用 Jira Service Management Operations REST API。
 
+[中文](README.md) | [English](README_EN.md)
+
 ## 功能特性
 
 - ✅ 完整的 API 覆蓋：支援所有 Jira Service Management Operations API 端點
@@ -57,6 +59,7 @@ import (
     "log"
     
     "github.com/circleyu/go-jsmops"
+    "github.com/circleyu/go-jsmops/alert"
     "github.com/sirupsen/logrus"
 )
 

@@ -2,6 +2,8 @@
 
 本目錄包含 go-jsmops 庫的使用範例。
 
+[中文](README.md) | [English](README_EN.md)
+
 ## 環境設置
 
 在運行範例之前，請設置以下環境變數：
