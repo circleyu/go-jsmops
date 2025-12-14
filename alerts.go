@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/alert"
 )
 
@@ -48,7 +48,7 @@ func newAlertsManager(client *APIClient) *alertsManager {
 
 func (manager *alertsManager) CreateAlert(data *alert.CreateAlertRequest) (*alert.SuccessResponse, error) {
 	output := &alert.SuccessResponse{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (manager *alertsManager) AssignAlert(data *alert.AssignAlertRequest) (*aler
 	if data.OwnerTeam != "" {
 		requestBody["ownerTeam"] = data.OwnerTeam
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func (manager *alertsManager) AddResponder(data *alert.AddResponderRequest) (*al
 	requestBody := map[string]interface{}{
 		"responder": data.Responder,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (manager *alertsManager) AddExtraProperties(data *alert.AddExtraPropertiesR
 	requestBody := map[string]interface{}{
 		"properties": data.Properties,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func (manager *alertsManager) DeleteExtraProperties(data *alert.DeleteExtraPrope
 	requestBody := map[string]interface{}{
 		"properties": data.Properties,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return err
 	}
@@ -179,7 +179,7 @@ func (manager *alertsManager) AddTags(data *alert.AddTagsRequest) (*alert.Succes
 	requestBody := map[string]interface{}{
 		"tags": data.Tags,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +194,7 @@ func (manager *alertsManager) DeleteTags(data *alert.DeleteTagsRequest) error {
 	requestBody := map[string]interface{}{
 		"tags": data.Tags,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return err
 	}
@@ -207,7 +207,7 @@ func (manager *alertsManager) EscalateAlert(data *alert.EscalateAlertRequest) (*
 	if data.Escalation.ID != "" || data.Escalation.Name != "" {
 		requestBody["escalation"] = data.Escalation
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +229,7 @@ func (manager *alertsManager) ExecuteCustomAction(data *alert.ExecuteCustomActio
 	if data.Note != "" {
 		requestBody["note"] = data.Note
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +249,7 @@ func (manager *alertsManager) SnoozeAlert(data *alert.SnoozeAlertRequest) (*aler
 	if data.UntilTime != "" {
 		requestBody["untilTime"] = data.UntilTime
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -280,7 +280,7 @@ func (manager *alertsManager) ListAlertNotes(data *alert.ListAlertNotesRequest) 
 
 func (manager *alertsManager) AddAlertNote(data *alert.AddNoteRequest) (*alert.AddNoteResponse, error) {
 	output := &alert.AddNoteResponse{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -300,7 +300,7 @@ func (manager *alertsManager) UpdateAlertNote(data *alert.UpdateAlertNoteRequest
 	requestBody := map[string]interface{}{
 		"note": data.Note,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -313,7 +313,7 @@ func (manager *alertsManager) UpdateAlertNote(data *alert.UpdateAlertNoteRequest
 
 func (manager *alertsManager) UpdateAlertPriority(data *alert.UpdateAlertPriorityRequest) (*alert.SuccessResponse, error) {
 	output := &alert.SuccessResponse{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -326,7 +326,7 @@ func (manager *alertsManager) UpdateAlertPriority(data *alert.UpdateAlertPriorit
 
 func (manager *alertsManager) UpdateAlertMessage(data *alert.UpdateAlertMessageRequest) (*alert.SuccessResponse, error) {
 	output := &alert.SuccessResponse{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -339,7 +339,7 @@ func (manager *alertsManager) UpdateAlertMessage(data *alert.UpdateAlertMessageR
 
 func (manager *alertsManager) UpdateAlertDescription(data *alert.UpdateAlertDescriptionRequest) (*alert.SuccessResponse, error) {
 	output := &alert.SuccessResponse{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}

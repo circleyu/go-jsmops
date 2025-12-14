@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/maintenances"
 )
 
@@ -43,7 +43,7 @@ func (manager *maintenancesManager) ListGlobalMaintenances(data *maintenances.Li
 
 func (manager *maintenancesManager) CreateGlobalMaintenance(data *maintenances.CreateGlobalMaintenanceRequest) (*maintenances.Maintenance, error) {
 	output := &maintenances.Maintenance{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (manager *maintenancesManager) UpdateGlobalMaintenance(data *maintenances.U
 	if data.Rules != nil {
 		requestBody["rules"] = data.Rules
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (manager *maintenancesManager) ListTeamMaintenances(data *maintenances.List
 
 func (manager *maintenancesManager) CreateTeamMaintenance(data *maintenances.CreateTeamMaintenanceRequest) (*maintenances.Maintenance, error) {
 	output := &maintenances.Maintenance{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func (manager *maintenancesManager) UpdateTeamMaintenance(data *maintenances.Upd
 	if data.Rules != nil {
 		requestBody["rules"] = data.Rules
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

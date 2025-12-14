@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/notificationrules"
 )
 
@@ -36,7 +36,7 @@ func (manager *notificationRulesManager) ListNotificationRules(data *notificatio
 
 func (manager *notificationRulesManager) CreateNotificationRule(data *notificationrules.CreateNotificationRuleRequest) (*notificationrules.NotificationRule, error) {
 	output := &notificationrules.NotificationRule{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (manager *notificationRulesManager) UpdateNotificationRule(data *notificati
 	if data.Config != nil {
 		requestBody["config"] = data.Config
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

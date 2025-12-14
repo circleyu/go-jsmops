@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/notificationrules/steps"
 )
 
@@ -36,7 +36,7 @@ func (manager *notificationRuleStepsManager) ListNotificationRuleSteps(data *ste
 
 func (manager *notificationRuleStepsManager) CreateNotificationRuleStep(data *steps.CreateNotificationRuleStepRequest) (*steps.NotificationRuleStep, error) {
 	output := &steps.NotificationRuleStep{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (manager *notificationRuleStepsManager) UpdateNotificationRuleStep(data *st
 	if data.Order > 0 {
 		requestBody["order"] = data.Order
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

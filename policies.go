@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/policies"
 )
 
@@ -39,7 +39,7 @@ func (manager *policiesManager) ListGlobalAlertPolicies(data *policies.ListGloba
 
 func (manager *policiesManager) CreateGlobalAlertPolicy(data *policies.CreateGlobalAlertPolicyRequest) (*policies.Policy, error) {
 	output := &policies.Policy{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (manager *policiesManager) PutGlobalAlertPolicy(data *policies.PutGlobalAle
 	if data.Order > 0 {
 		requestBody["order"] = data.Order
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func (manager *policiesManager) ChangeOrderGlobalAlertPolicy(data *policies.Chan
 	requestBody := map[string]interface{}{
 		"order": data.Order,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

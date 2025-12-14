@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/routingrules"
 )
 
@@ -37,7 +37,7 @@ func (manager *routingRulesManager) ListRoutingRules(data *routingrules.ListRout
 
 func (manager *routingRulesManager) CreateRoutingRule(data *routingrules.CreateRoutingRuleRequest) (*routingrules.RoutingRule, error) {
 	output := &routingrules.RoutingRule{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (manager *routingRulesManager) UpdateRoutingRule(data *routingrules.UpdateR
 	if data.Order > 0 {
 		requestBody["order"] = data.Order
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (manager *routingRulesManager) ChangeOrderRoutingRule(data *routingrules.Ch
 	requestBody := map[string]interface{}{
 		"order": data.Order,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

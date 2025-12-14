@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/jec"
 )
 
@@ -36,7 +36,7 @@ func (manager *jecManager) ListJECChannels(data *jec.ListJECChannelsRequest) (*j
 
 func (manager *jecManager) CreateJECChannel(data *jec.CreateJECChannelRequest) (*jec.JECChannel, error) {
 	output := &jec.JECChannel{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (manager *jecManager) DeleteJECChannel(data *jec.DeleteJECChannelRequest) e
 
 func (manager *jecManager) SendJECAction(data *jec.SendJECActionRequest) (*jec.SendJECActionResponse, error) {
 	output := &jec.SendJECActionResponse{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}

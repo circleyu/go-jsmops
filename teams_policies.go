@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/teams/policies"
 )
 
@@ -39,7 +39,7 @@ func (manager *teamPoliciesManager) ListTeamPolicies(data *policies.ListTeamPoli
 
 func (manager *teamPoliciesManager) CreateTeamPolicy(data *policies.CreateTeamPolicyRequest) (*policies.TeamPolicy, error) {
 	output := &policies.TeamPolicy{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (manager *teamPoliciesManager) PutTeamPolicy(data *policies.PutTeamPolicyRe
 	if data.Order > 0 {
 		requestBody["order"] = data.Order
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func (manager *teamPoliciesManager) ChangeOrderTeamPolicy(data *policies.ChangeO
 	requestBody := map[string]interface{}{
 		"order": data.Order,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

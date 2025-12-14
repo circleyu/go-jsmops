@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/integrations/actions"
 )
 
@@ -37,7 +37,7 @@ func (manager *integrationActionsManager) ListIntegrationActions(data *actions.L
 
 func (manager *integrationActionsManager) CreateIntegrationAction(data *actions.CreateIntegrationActionRequest) (*actions.IntegrationAction, error) {
 	output := &actions.IntegrationAction{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func (manager *integrationActionsManager) UpdateIntegrationAction(data *actions.
 	if data.Order > 0 {
 		requestBody["order"] = data.Order
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (manager *integrationActionsManager) ReorderIntegrationAction(data *actions
 	requestBody := map[string]interface{}{
 		"order": data.Order,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

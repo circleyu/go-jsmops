@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/contacts"
 )
 
@@ -38,7 +38,7 @@ func (manager *contactsManager) ListContacts(data *contacts.ListContactsRequest)
 
 func (manager *contactsManager) CreateContact(data *contacts.CreateContactRequest) (*contacts.Contact, error) {
 	output := &contacts.Contact{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (manager *contactsManager) UpdateContact(data *contacts.UpdateContactReques
 	requestBody := map[string]interface{}{
 		"value": data.Value,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

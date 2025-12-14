@@ -1,12 +1,11 @@
 package jsmops
 
 import (
-	"bytes"
-	"encoding/json"
 	"io"
 	"net/http"
 	"os"
 
+	"github.com/bytedance/sonic"
 	"github.com/sirupsen/logrus"
 )
 
@@ -132,9 +131,17 @@ func (client *APIClient) logReq(req *http.Request) {
 		client.logger.Debugf("URL: %s", req.URL)
 		if req.Body != nil {
 			body, _ := io.ReadAll(req.Body)
-			var jsonBuffer bytes.Buffer
-			json.Indent(&jsonBuffer, body, "", "\t")
-			client.logger.Debug(jsonBuffer.String())
+			// 使用 sonic 格式化 JSON
+			var jsonData interface{}
+			if err := sonic.Unmarshal(body, &jsonData); err == nil {
+				if formatted, err := sonic.MarshalIndent(jsonData, "", "\t"); err == nil {
+					client.logger.Debug(string(formatted))
+				} else {
+					client.logger.Debug(string(body))
+				}
+			} else {
+				client.logger.Debug(string(body))
+			}
 		}
 	}
 }
@@ -147,15 +154,23 @@ func (client *APIClient) logRes(res *http.Response) {
 			if err != nil {
 				client.logger.Debug(err.Error())
 			}
-			var jsonBuffer bytes.Buffer
-			json.Indent(&jsonBuffer, body, "", "\t")
-			client.logger.Debug(jsonBuffer.String())
+			// 使用 sonic 格式化 JSON
+			var jsonData interface{}
+			if err := sonic.Unmarshal(body, &jsonData); err == nil {
+				if formatted, err := sonic.MarshalIndent(jsonData, "", "\t"); err == nil {
+					client.logger.Debug(string(formatted))
+				} else {
+					client.logger.Debug(string(body))
+				}
+			} else {
+				client.logger.Debug(string(body))
+			}
 		}
 	}
 }
 
 // BackupJSON ...
 func (client *APIClient) BackupJSON(fileName string, data interface{}) error {
-	backupJSON, _ := json.Marshal(data)
+	backupJSON, _ := sonic.Marshal(data)
 	return os.WriteFile(fileName, backupJSON, 0644)
 }

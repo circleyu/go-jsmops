@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/schedules/rotations"
 )
 
@@ -36,7 +36,7 @@ func (manager *schedulesRotationsManager) ListRotations(data *rotations.ListRota
 
 func (manager *schedulesRotationsManager) CreateRotation(data *rotations.CreateRotationRequest) (*rotations.Rotation, error) {
 	output := &rotations.Rotation{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (manager *schedulesRotationsManager) UpdateRotation(data *rotations.UpdateR
 	if data.Type != "" {
 		requestBody["type"] = data.Type
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

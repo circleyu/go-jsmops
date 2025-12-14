@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/schedules"
 )
 
@@ -36,7 +36,7 @@ func (manager *schedulesManager) ListSchedules(data *schedules.ListSchedulesRequ
 
 func (manager *schedulesManager) CreateSchedule(data *schedules.CreateScheduleRequest) (*schedules.Schedule, error) {
 	output := &schedules.Schedule{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (manager *schedulesManager) UpdateSchedule(data *schedules.UpdateScheduleRe
 	if data.Config != nil {
 		requestBody["config"] = data.Config
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

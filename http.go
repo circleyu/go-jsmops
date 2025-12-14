@@ -2,12 +2,12 @@ package jsmops
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/params"
 )
 
@@ -67,10 +67,15 @@ func (c *APIClient) post(path string, body io.Reader, out interface{}, params *p
 		body, err := io.ReadAll(res.Body)
 		apiError := ""
 		if err == nil {
-			var jsonBuffer bytes.Buffer
-			err := json.Indent(&jsonBuffer, body, "", "\t")
-			if err == nil {
-				apiError = jsonBuffer.String()
+			// 使用 sonic 格式化 JSON
+			var jsonData interface{}
+			if err := sonic.Unmarshal(body, &jsonData); err == nil {
+				if formatted, err := sonic.MarshalIndent(jsonData, "", "\t"); err == nil {
+					apiError = string(formatted)
+				}
+			}
+			if apiError == "" {
+				apiError = string(body)
 			}
 		}
 		if res.StatusCode == http.StatusBadRequest && c.logger != nil {
@@ -85,7 +90,7 @@ func (c *APIClient) post(path string, body io.Reader, out interface{}, params *p
 	}
 
 	if out != nil {
-		err = json.NewDecoder(res.Body).Decode(out)
+		err = sonic.ConfigDefault.NewDecoder(res.Body).Decode(out)
 		return err
 	}
 
@@ -134,10 +139,15 @@ func (c *APIClient) put(path string, requestBody []byte, out interface{}, expect
 		body, err := io.ReadAll(res.Body)
 		var apiError string
 		if err == nil {
-			var jsonBuffer bytes.Buffer
-			err := json.Indent(&jsonBuffer, body, "", "\t")
-			if err == nil {
-				apiError = jsonBuffer.String()
+			// 使用 sonic 格式化 JSON
+			var jsonData interface{}
+			if err := sonic.Unmarshal(body, &jsonData); err == nil {
+				if formatted, err := sonic.MarshalIndent(jsonData, "", "\t"); err == nil {
+					apiError = string(formatted)
+				}
+			}
+			if apiError == "" {
+				apiError = string(body)
 			}
 		}
 		if res.StatusCode == http.StatusBadRequest && c.logger != nil {
@@ -151,7 +161,7 @@ func (c *APIClient) put(path string, requestBody []byte, out interface{}, expect
 		}
 	}
 
-	err = json.NewDecoder(res.Body).Decode(out)
+	err = sonic.ConfigDefault.NewDecoder(res.Body).Decode(out)
 
 	return err
 }
@@ -192,7 +202,7 @@ func (c *APIClient) get(path string, out interface{}, params *params.Params) (ht
 	if c.logger != nil && c.logLevel >= LogDebug {
 		c.logRes(res)
 	}
-	json.NewDecoder(res.Body).Decode(out)
+	sonic.ConfigDefault.NewDecoder(res.Body).Decode(out)
 
 	return res.Header, err
 }
@@ -279,10 +289,15 @@ func (c *APIClient) patch(path string, requestBody []byte, out interface{}, expe
 		body, err := io.ReadAll(res.Body)
 		var apiError string
 		if err == nil {
-			var jsonBuffer bytes.Buffer
-			err := json.Indent(&jsonBuffer, body, "", "\t")
-			if err == nil {
-				apiError = jsonBuffer.String()
+			// 使用 sonic 格式化 JSON
+			var jsonData interface{}
+			if err := sonic.Unmarshal(body, &jsonData); err == nil {
+				if formatted, err := sonic.MarshalIndent(jsonData, "", "\t"); err == nil {
+					apiError = string(formatted)
+				}
+			}
+			if apiError == "" {
+				apiError = string(body)
 			}
 		}
 		if res.StatusCode == http.StatusBadRequest && c.logger != nil {
@@ -297,7 +312,7 @@ func (c *APIClient) patch(path string, requestBody []byte, out interface{}, expe
 	}
 
 	if out != nil {
-		err = json.NewDecoder(res.Body).Decode(out)
+		err = sonic.ConfigDefault.NewDecoder(res.Body).Decode(out)
 		return err
 	}
 
@@ -354,10 +369,15 @@ func (c *APIClient) delete(path string, requestBody []byte, expectedStatus ...in
 		body, err := io.ReadAll(res.Body)
 		var apiError string
 		if err == nil {
-			var jsonBuffer bytes.Buffer
-			err := json.Indent(&jsonBuffer, body, "", "\t")
-			if err == nil {
-				apiError = jsonBuffer.String()
+			// 使用 sonic 格式化 JSON
+			var jsonData interface{}
+			if err := sonic.Unmarshal(body, &jsonData); err == nil {
+				if formatted, err := sonic.MarshalIndent(jsonData, "", "\t"); err == nil {
+					apiError = string(formatted)
+				}
+			}
+			if apiError == "" {
+				apiError = string(body)
 			}
 		}
 		if res.StatusCode == http.StatusBadRequest && c.logger != nil {

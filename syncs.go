@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/syncs"
 )
 
@@ -36,7 +36,7 @@ func (manager *syncsManager) ListSyncs(data *syncs.ListSyncsRequest) (*syncs.Lis
 
 func (manager *syncsManager) CreateSync(data *syncs.CreateSyncRequest) (*syncs.Sync, error) {
 	output := &syncs.Sync{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (manager *syncsManager) UpdateSync(data *syncs.UpdateSyncRequest) (*syncs.S
 	if data.Config != nil {
 		requestBody["config"] = data.Config
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

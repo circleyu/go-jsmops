@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/integrations/filters"
 )
 
@@ -33,7 +33,7 @@ func (manager *integrationFiltersManager) GetIntegrationAlertFilter(data *filter
 
 func (manager *integrationFiltersManager) UpdateIntegrationAlertFilter(data *filters.UpdateIntegrationAlertFilterRequest) (*filters.IntegrationAlertFilter, error) {
 	output := &filters.IntegrationAlertFilter{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}

@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/syncs/actiongroups"
 )
 
@@ -37,7 +37,7 @@ func (manager *syncsActionGroupsManager) ListSyncActionGroups(data *actiongroups
 
 func (manager *syncsActionGroupsManager) CreateSyncActionGroup(data *actiongroups.CreateSyncActionGroupRequest) (*actiongroups.SyncActionGroup, error) {
 	output := &actiongroups.SyncActionGroup{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func (manager *syncsActionGroupsManager) UpdateSyncActionGroup(data *actiongroup
 	if data.Config != nil {
 		requestBody["config"] = data.Config
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (manager *syncsActionGroupsManager) ReorderSyncActionGroup(data *actiongrou
 	requestBody := map[string]interface{}{
 		"order": data.Order,
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

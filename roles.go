@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/roles"
 )
 
@@ -46,7 +46,7 @@ func (manager *rolesManager) GetCustomUserRole(data *roles.GetCustomUserRoleRequ
 
 func (manager *rolesManager) CreateCustomUserRole(data *roles.CreateCustomUserRoleRequest) (*roles.CustomUserRole, error) {
 	output := &roles.CustomUserRole{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (manager *rolesManager) UpdateCustomUserRole(data *roles.UpdateCustomUserRo
 	if len(data.Permissions) > 0 {
 		requestBody["permissions"] = data.Permissions
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (manager *rolesManager) DeleteCustomUserRole(data *roles.DeleteCustomUserRo
 
 func (manager *rolesManager) AssignCustomUserRole(data *roles.AssignCustomUserRoleRequest) (*roles.SuccessResponse, error) {
 	output := &roles.SuccessResponse{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}

@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/integrations"
 )
 
@@ -36,7 +36,7 @@ func (manager *integrationsManager) ListIntegrations(data *integrations.ListInte
 
 func (manager *integrationsManager) CreateIntegration(data *integrations.CreateIntegrationRequest) (*integrations.Integration, error) {
 	output := &integrations.Integration{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (manager *integrationsManager) UpdateIntegration(data *integrations.UpdateI
 	if data.Config != nil {
 		requestBody["config"] = data.Config
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

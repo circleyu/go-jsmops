@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/teams/roles"
 )
 
@@ -45,7 +45,7 @@ func (manager *teamRolesManager) GetTeamRole(data *roles.GetTeamRoleRequest) (*r
 
 func (manager *teamRolesManager) CreateTeamRole(data *roles.CreateTeamRoleRequest) (*roles.TeamRole, error) {
 	output := &roles.TeamRole{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (manager *teamRolesManager) UpdateTeamRole(data *roles.UpdateTeamRoleReques
 	if len(data.Permissions) > 0 {
 		requestBody["permissions"] = data.Permissions
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

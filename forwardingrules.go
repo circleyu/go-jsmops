@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/forwardingrules"
 )
 
@@ -36,7 +36,7 @@ func (manager *forwardingRulesManager) ListForwardingRules(data *forwardingrules
 
 func (manager *forwardingRulesManager) CreateForwardingRule(data *forwardingrules.CreateForwardingRuleRequest) (*forwardingrules.ForwardingRule, error) {
 	output := &forwardingrules.ForwardingRule{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (manager *forwardingRulesManager) UpdateForwardingRule(data *forwardingrule
 	if data.To != "" {
 		requestBody["to"] = data.To
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

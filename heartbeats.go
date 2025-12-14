@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/heartbeats"
 	"github.com/circleyu/go-jsmops/params"
 )
@@ -37,7 +37,7 @@ func (manager *heartbeatsManager) ListHeartbeats(data *heartbeats.ListHeartbeats
 
 func (manager *heartbeatsManager) CreateHeartbeat(data *heartbeats.CreateHeartbeatRequest) (*heartbeats.Heartbeat, error) {
 	output := &heartbeats.Heartbeat{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (manager *heartbeatsManager) UpdateHeartbeat(data *heartbeats.UpdateHeartbe
 	if data.Enabled != nil {
 		requestBody["enabled"] = *data.Enabled
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/schedules/overrides"
 )
 
@@ -36,7 +36,7 @@ func (manager *schedulesOverridesManager) ListOverrides(data *overrides.ListOver
 
 func (manager *schedulesOverridesManager) CreateOverride(data *overrides.CreateOverrideRequest) (*overrides.Override, error) {
 	output := &overrides.Override{}
-	jsonb, err := json.Marshal(data)
+	jsonb, err := sonic.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (manager *schedulesOverridesManager) UpdateOverride(data *overrides.UpdateO
 	if data.Responder != nil {
 		requestBody["responder"] = data.Responder
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}

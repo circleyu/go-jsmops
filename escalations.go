@@ -1,9 +1,9 @@
 package jsmops
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/circleyu/go-jsmops/escalations"
 )
 
@@ -48,7 +48,7 @@ func (manager *escalationsManager) CreateEscalation(data *escalations.CreateEsca
 	if data.Repeat != nil {
 		requestBody["repeat"] = data.Repeat
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (manager *escalationsManager) UpdateEscalation(data *escalations.UpdateEsca
 	if data.Repeat != nil {
 		requestBody["repeat"] = data.Repeat
 	}
-	jsonb, err := json.Marshal(requestBody)
+	jsonb, err := sonic.Marshal(requestBody)
 	if err != nil {
 		return nil, err
 	}
