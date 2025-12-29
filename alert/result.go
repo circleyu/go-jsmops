@@ -3,28 +3,34 @@ package alert
 import "time"
 
 type Alert struct {
-	Seen           bool        `json:"seen,omitempty"`
-	Id             string      `json:"id,omitempty"`
-	TinyID         string      `json:"tinyId,omitempty"`
-	Alias          string      `json:"alias,omitempty"`
-	Message        string      `json:"message,omitempty"`
-	Status         string      `json:"status,omitempty"`
-	Acknowledged   bool        `json:"acknowledged,omitempty"`
-	IsSeen         bool        `json:"isSeen,omitempty"`
-	Tags           []string    `json:"tags,omitempty"`
-	Snoozed        bool        `json:"snoozed,omitempty"`
-	SnoozedUntil   time.Time   `json:"snoozedUntil,omitempty"`
-	Count          int         `json:"count,omitempty"`
-	LastOccurredAt time.Time   `json:"lastOccurredAt,omitempty"`
-	CreatedAt      time.Time   `json:"createdAt,omitempty"`
-	UpdatedAt      time.Time   `json:"updatedAt,omitempty"`
-	Source         string      `json:"source,omitempty"`
-	Owner          string      `json:"owner,omitempty"`
-	Priority       Priority    `json:"priority,omitempty"`
-	Responders     []Responder `json:"responders"`
-	Integration    Integration `json:"integration,omitempty"`
-	Report         Report      `json:"report,omitempty"`
-	OwnerTeamID    string      `json:"ownerTeamId,omitempty"`
+	Seen            bool                   `json:"seen,omitempty"`
+	Id              string                 `json:"id,omitempty"`
+	TinyID          string                 `json:"tinyId,omitempty"`
+	Alias           string                 `json:"alias,omitempty"`
+	Message         string                 `json:"message,omitempty"`
+	Status          string                 `json:"status,omitempty"`
+	Acknowledged    bool                   `json:"acknowledged,omitempty"`
+	IsSeen          bool                   `json:"isSeen,omitempty"`
+	Tags            []string               `json:"tags,omitempty"`
+	Snoozed         bool                   `json:"snoozed,omitempty"`
+	SnoozedUntil    time.Time              `json:"snoozedUntil,omitempty"`
+	Count           int                    `json:"count,omitempty"`
+	LastOccurredAt  time.Time              `json:"lastOccurredAt,omitempty"`
+	CreatedAt       time.Time              `json:"createdAt,omitempty"`
+	UpdatedAt       time.Time              `json:"updatedAt,omitempty"`
+	Source          string                 `json:"source,omitempty"`
+	Owner           string                 `json:"owner,omitempty"`
+	Priority        Priority               `json:"priority,omitempty"`
+	Responders      []Responder            `json:"responders"`
+	Integration     Integration            `json:"integration,omitempty"`
+	Report          Report                 `json:"report,omitempty"`
+	OwnerTeamID     string                 `json:"ownerTeamId,omitempty"`
+	Entity          string                 `json:"entity,omitempty"`
+	Description     string                 `json:"description,omitempty"`
+	Actions         []string               `json:"actions,omitempty"`
+	ExtraProperties map[string]interface{} `json:"extraProperties,omitempty"`
+	IntegrationType string                 `json:"integrationType,omitempty"`
+	IntegrationName string                 `json:"integrationName,omitempty"`
 }
 
 type Integration struct {

@@ -5,19 +5,20 @@ import (
 )
 
 type CreateAlertRequest struct {
-	Message     string            `json:"message"`
-	Alias       string            `json:"alias,omitempty"`
-	Description string            `json:"description,omitempty"`
-	Responders  []Responder       `json:"responders,omitempty"`
-	VisibleTo   []Responder       `json:"visibleTo,omitempty"`
-	Actions     []string          `json:"actions,omitempty"`
-	Tags        []string          `json:"tags,omitempty"`
-	Details     map[string]string `json:"details,omitempty"`
-	Entity      string            `json:"entity,omitempty"`
-	Source      string            `json:"source,omitempty"`
-	Priority    Priority          `json:"priority,omitempty"`
-	User        string            `json:"user,omitempty"`
-	Note        string            `json:"note,omitempty"`
+	Message         string                 `json:"message"`
+	Alias           string                 `json:"alias,omitempty"`
+	Description     string                 `json:"description,omitempty"`
+	Responders      []Responder            `json:"responders,omitempty"`
+	VisibleTo       []Responder            `json:"visibleTo,omitempty"`
+	Actions         []string               `json:"actions,omitempty"`
+	Tags            []string               `json:"tags,omitempty"`
+	Details         map[string]string      `json:"details,omitempty"`
+	Entity          string                 `json:"entity,omitempty"`
+	Source          string                 `json:"source,omitempty"`
+	Priority        Priority               `json:"priority,omitempty"`
+	User            string                 `json:"user,omitempty"`
+	Note            string                 `json:"note,omitempty"`
+	ExtraProperties map[string]interface{} `json:"extraProperties,omitempty"`
 }
 
 func (r *CreateAlertRequest) Validate() error {
