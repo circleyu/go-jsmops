@@ -23,6 +23,9 @@ func newTeamsManager(client *APIClient) *teamsManager {
 }
 
 func (manager *teamsManager) ListTeams(data *teams.ListTeamsRequest) (*teams.ListTeamsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &teams.ListTeamsResult{}
 	_, err := manager.get(endpoints.teams.ListTeams, output, nil)
 	if err != nil {
@@ -32,6 +35,9 @@ func (manager *teamsManager) ListTeams(data *teams.ListTeamsRequest) (*teams.Lis
 }
 
 func (manager *teamsManager) EnableOps(data *teams.EnableOpsRequest) (*teams.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &teams.SuccessResponse{}
 	err := manager.postJSON(endpoints.teams.EnableOps(data.TeamID), nil, output, nil, http.StatusAccepted, http.StatusOK)
 	if err != nil {
@@ -41,6 +47,9 @@ func (manager *teamsManager) EnableOps(data *teams.EnableOpsRequest) (*teams.Suc
 }
 
 func (manager *teamsManager) GetTeamRequestStatus(data *teams.GetTeamRequestStatusRequest) (*teams.RequestStatusResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &teams.RequestStatusResponse{}
 	_, err := manager.get(endpoints.teams.GetTeamRequestStatus(data.TeamID, data.RequestID), output, nil)
 	if err != nil {

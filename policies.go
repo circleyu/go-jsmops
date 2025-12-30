@@ -29,6 +29,9 @@ func newPoliciesManager(client *APIClient) *policiesManager {
 }
 
 func (manager *policiesManager) ListGlobalAlertPolicies(data *policies.ListGlobalAlertPoliciesRequest) (*policies.ListPoliciesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.ListPoliciesResult{}
 	_, err := manager.get(endpoints.policies.ListGlobalAlertPolicies, output, data.RequestParams())
 	if err != nil {
@@ -38,6 +41,9 @@ func (manager *policiesManager) ListGlobalAlertPolicies(data *policies.ListGloba
 }
 
 func (manager *policiesManager) CreateGlobalAlertPolicy(data *policies.CreateGlobalAlertPolicyRequest) (*policies.Policy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.Policy{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -51,6 +57,9 @@ func (manager *policiesManager) CreateGlobalAlertPolicy(data *policies.CreateGlo
 }
 
 func (manager *policiesManager) GetGlobalAlertPolicy(data *policies.GetGlobalAlertPolicyRequest) (*policies.Policy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.Policy{}
 	_, err := manager.get(endpoints.policies.GetGlobalAlertPolicy(data.PolicyID), output, nil)
 	if err != nil {
@@ -60,6 +69,9 @@ func (manager *policiesManager) GetGlobalAlertPolicy(data *policies.GetGlobalAle
 }
 
 func (manager *policiesManager) PutGlobalAlertPolicy(data *policies.PutGlobalAlertPolicyRequest) (*policies.Policy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.Policy{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -89,10 +101,16 @@ func (manager *policiesManager) PutGlobalAlertPolicy(data *policies.PutGlobalAle
 }
 
 func (manager *policiesManager) DeleteGlobalAlertPolicy(data *policies.DeleteGlobalAlertPolicyRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.policies.DeleteGlobalAlertPolicy(data.PolicyID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *policiesManager) ChangeOrderGlobalAlertPolicy(data *policies.ChangeOrderGlobalAlertPolicyRequest) (*policies.Policy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.Policy{}
 	requestBody := map[string]interface{}{
 		"order": data.Order,
@@ -109,6 +127,9 @@ func (manager *policiesManager) ChangeOrderGlobalAlertPolicy(data *policies.Chan
 }
 
 func (manager *policiesManager) EnableGlobalAlertPolicy(data *policies.EnableGlobalAlertPolicyRequest) (*policies.Policy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.Policy{}
 	err := manager.postJSON(endpoints.policies.EnableGlobalAlertPolicy(data.PolicyID), nil, output, nil, http.StatusOK)
 	if err != nil {
@@ -118,6 +139,9 @@ func (manager *policiesManager) EnableGlobalAlertPolicy(data *policies.EnableGlo
 }
 
 func (manager *policiesManager) DisableGlobalAlertPolicy(data *policies.DisableGlobalAlertPolicyRequest) (*policies.Policy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.Policy{}
 	err := manager.postJSON(endpoints.policies.DisableGlobalAlertPolicy(data.PolicyID), nil, output, nil, http.StatusOK)
 	if err != nil {

@@ -26,6 +26,9 @@ func newNotificationRulesManager(client *APIClient) *notificationRulesManager {
 }
 
 func (manager *notificationRulesManager) ListNotificationRules(data *notificationrules.ListNotificationRulesRequest) (*notificationrules.ListNotificationRulesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &notificationrules.ListNotificationRulesResult{}
 	_, err := manager.get(endpoints.notificationRules.ListNotificationRules, output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *notificationRulesManager) ListNotificationRules(data *notificatio
 }
 
 func (manager *notificationRulesManager) CreateNotificationRule(data *notificationrules.CreateNotificationRuleRequest) (*notificationrules.NotificationRule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &notificationrules.NotificationRule{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,6 +54,9 @@ func (manager *notificationRulesManager) CreateNotificationRule(data *notificati
 }
 
 func (manager *notificationRulesManager) GetNotificationRule(data *notificationrules.GetNotificationRuleRequest) (*notificationrules.NotificationRule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &notificationrules.NotificationRule{}
 	_, err := manager.get(endpoints.notificationRules.GetNotificationRule(data.ID), output, nil)
 	if err != nil {
@@ -57,6 +66,9 @@ func (manager *notificationRulesManager) GetNotificationRule(data *notificationr
 }
 
 func (manager *notificationRulesManager) UpdateNotificationRule(data *notificationrules.UpdateNotificationRuleRequest) (*notificationrules.NotificationRule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &notificationrules.NotificationRule{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -83,6 +95,9 @@ func (manager *notificationRulesManager) UpdateNotificationRule(data *notificati
 }
 
 func (manager *notificationRulesManager) DeleteNotificationRule(data *notificationrules.DeleteNotificationRuleRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.notificationRules.DeleteNotificationRule(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 

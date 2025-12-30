@@ -26,6 +26,9 @@ func newSchedulesRotationsManager(client *APIClient) *schedulesRotationsManager 
 }
 
 func (manager *schedulesRotationsManager) ListRotations(data *rotations.ListRotationsRequest) (*rotations.ListRotationsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &rotations.ListRotationsResult{}
 	_, err := manager.get(endpoints.schedulesRotations.ListRotations(data.ScheduleID), output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *schedulesRotationsManager) ListRotations(data *rotations.ListRota
 }
 
 func (manager *schedulesRotationsManager) CreateRotation(data *rotations.CreateRotationRequest) (*rotations.Rotation, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &rotations.Rotation{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,6 +54,9 @@ func (manager *schedulesRotationsManager) CreateRotation(data *rotations.CreateR
 }
 
 func (manager *schedulesRotationsManager) GetRotation(data *rotations.GetRotationRequest) (*rotations.Rotation, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &rotations.Rotation{}
 	_, err := manager.get(endpoints.schedulesRotations.GetRotation(data.ScheduleID, data.ID), output, nil)
 	if err != nil {
@@ -57,6 +66,9 @@ func (manager *schedulesRotationsManager) GetRotation(data *rotations.GetRotatio
 }
 
 func (manager *schedulesRotationsManager) UpdateRotation(data *rotations.UpdateRotationRequest) (*rotations.Rotation, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &rotations.Rotation{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -86,6 +98,9 @@ func (manager *schedulesRotationsManager) UpdateRotation(data *rotations.UpdateR
 }
 
 func (manager *schedulesRotationsManager) DeleteRotation(data *rotations.DeleteRotationRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.schedulesRotations.DeleteRotation(data.ScheduleID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 

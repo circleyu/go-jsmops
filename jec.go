@@ -26,6 +26,9 @@ func newJECManager(client *APIClient) *jecManager {
 }
 
 func (manager *jecManager) ListJECChannels(data *jec.ListJECChannelsRequest) (*jec.ListJECChannelsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &jec.ListJECChannelsResult{}
 	_, err := manager.get(endpoints.jec.ListJECChannels, output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *jecManager) ListJECChannels(data *jec.ListJECChannelsRequest) (*j
 }
 
 func (manager *jecManager) CreateJECChannel(data *jec.CreateJECChannelRequest) (*jec.JECChannel, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &jec.JECChannel{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,6 +54,9 @@ func (manager *jecManager) CreateJECChannel(data *jec.CreateJECChannelRequest) (
 }
 
 func (manager *jecManager) GetJECChannel(data *jec.GetJECChannelRequest) (*jec.JECChannel, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &jec.JECChannel{}
 	_, err := manager.get(endpoints.jec.GetJECChannel(data.ID), output, nil)
 	if err != nil {
@@ -57,10 +66,16 @@ func (manager *jecManager) GetJECChannel(data *jec.GetJECChannelRequest) (*jec.J
 }
 
 func (manager *jecManager) DeleteJECChannel(data *jec.DeleteJECChannelRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.jec.DeleteJECChannel(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *jecManager) SendJECAction(data *jec.SendJECActionRequest) (*jec.SendJECActionResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &jec.SendJECActionResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {

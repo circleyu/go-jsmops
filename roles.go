@@ -27,6 +27,9 @@ func newRolesManager(client *APIClient) *rolesManager {
 }
 
 func (manager *rolesManager) ListCustomUserRoles(data *roles.ListCustomUserRolesRequest) (*roles.ListCustomUserRolesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.ListCustomUserRolesResult{}
 	_, err := manager.get(endpoints.roles.ListCustomUserRoles, output, data.RequestParams())
 	if err != nil {
@@ -36,6 +39,9 @@ func (manager *rolesManager) ListCustomUserRoles(data *roles.ListCustomUserRoles
 }
 
 func (manager *rolesManager) GetCustomUserRole(data *roles.GetCustomUserRoleRequest) (*roles.CustomUserRole, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.CustomUserRole{}
 	_, err := manager.get(endpoints.roles.GetCustomUserRole(data.Identifier), output, data.RequestParams())
 	if err != nil {
@@ -45,6 +51,9 @@ func (manager *rolesManager) GetCustomUserRole(data *roles.GetCustomUserRoleRequ
 }
 
 func (manager *rolesManager) CreateCustomUserRole(data *roles.CreateCustomUserRoleRequest) (*roles.CustomUserRole, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.CustomUserRole{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -58,6 +67,9 @@ func (manager *rolesManager) CreateCustomUserRole(data *roles.CreateCustomUserRo
 }
 
 func (manager *rolesManager) UpdateCustomUserRole(data *roles.UpdateCustomUserRoleRequest) (*roles.CustomUserRole, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.CustomUserRole{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -88,6 +100,9 @@ func (manager *rolesManager) UpdateCustomUserRole(data *roles.UpdateCustomUserRo
 }
 
 func (manager *rolesManager) DeleteCustomUserRole(data *roles.DeleteCustomUserRoleRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	params := data.RequestParams()
 	var path string
 	if params != nil {
@@ -99,6 +114,9 @@ func (manager *rolesManager) DeleteCustomUserRole(data *roles.DeleteCustomUserRo
 }
 
 func (manager *rolesManager) AssignCustomUserRole(data *roles.AssignCustomUserRoleRequest) (*roles.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {

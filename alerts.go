@@ -47,6 +47,9 @@ func newAlertsManager(client *APIClient) *alertsManager {
 }
 
 func (manager *alertsManager) CreateAlert(data *alert.CreateAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -61,6 +64,9 @@ func (manager *alertsManager) CreateAlert(data *alert.CreateAlertRequest) (*aler
 }
 
 func (manager *alertsManager) AcknowledgeAlert(data *alert.AcknowledgeAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	err := manager.post(endpoints.alerts.AcknowledgeAlert(data.IdentifierValue), nil, output, nil, http.StatusAccepted)
 	if err != nil {
@@ -71,6 +77,9 @@ func (manager *alertsManager) AcknowledgeAlert(data *alert.AcknowledgeAlertReque
 }
 
 func (manager *alertsManager) CloseAlert(data *alert.CloseAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	err := manager.post(endpoints.alerts.CloseAlert(data.IdentifierValue), nil, output, nil, http.StatusAccepted)
 	if err != nil {
@@ -81,6 +90,9 @@ func (manager *alertsManager) CloseAlert(data *alert.CloseAlertRequest) (*alert.
 }
 
 func (manager *alertsManager) GetRequestStatus(data *alert.GetRequestStatusRequest) (*alert.RequestStatusResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.RequestStatusResponse{}
 	_, err := manager.get(endpoints.alerts.GetRequestStatus(data.RequestID), output, nil)
 	if err != nil {
@@ -90,6 +102,9 @@ func (manager *alertsManager) GetRequestStatus(data *alert.GetRequestStatusReque
 }
 
 func (manager *alertsManager) GetAlert(data *alert.GetAlertRequest) (*alert.Alert, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.Alert{}
 	_, err := manager.get(endpoints.alerts.GetAlert(data.ID), output, nil)
 	if err != nil {
@@ -99,10 +114,16 @@ func (manager *alertsManager) GetAlert(data *alert.GetAlertRequest) (*alert.Aler
 }
 
 func (manager *alertsManager) DeleteAlert(data *alert.DeleteAlertRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.alerts.DeleteAlert(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *alertsManager) GetAlertByAlias(data *alert.GetAlertByAliasRequest) (*alert.Alert, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.Alert{}
 	_, err := manager.get(endpoints.alerts.GetAlertByAlias, output, data.RequestParams())
 	if err != nil {
@@ -112,6 +133,9 @@ func (manager *alertsManager) GetAlertByAlias(data *alert.GetAlertByAliasRequest
 }
 
 func (manager *alertsManager) AssignAlert(data *alert.AssignAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	requestBody := make(map[string]interface{})
 	if data.Owner != nil {
@@ -132,6 +156,9 @@ func (manager *alertsManager) AssignAlert(data *alert.AssignAlertRequest) (*aler
 }
 
 func (manager *alertsManager) AddResponder(data *alert.AddResponderRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	requestBody := map[string]interface{}{
 		"responder": data.Responder,
@@ -148,6 +175,9 @@ func (manager *alertsManager) AddResponder(data *alert.AddResponderRequest) (*al
 }
 
 func (manager *alertsManager) AddExtraProperties(data *alert.AddExtraPropertiesRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	requestBody := map[string]interface{}{
 		"properties": data.Properties,
@@ -164,6 +194,9 @@ func (manager *alertsManager) AddExtraProperties(data *alert.AddExtraPropertiesR
 }
 
 func (manager *alertsManager) DeleteExtraProperties(data *alert.DeleteExtraPropertiesRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	requestBody := map[string]interface{}{
 		"properties": data.Properties,
 	}
@@ -175,6 +208,9 @@ func (manager *alertsManager) DeleteExtraProperties(data *alert.DeleteExtraPrope
 }
 
 func (manager *alertsManager) AddTags(data *alert.AddTagsRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	requestBody := map[string]interface{}{
 		"tags": data.Tags,
@@ -191,6 +227,9 @@ func (manager *alertsManager) AddTags(data *alert.AddTagsRequest) (*alert.Succes
 }
 
 func (manager *alertsManager) DeleteTags(data *alert.DeleteTagsRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	requestBody := map[string]interface{}{
 		"tags": data.Tags,
 	}
@@ -202,6 +241,9 @@ func (manager *alertsManager) DeleteTags(data *alert.DeleteTagsRequest) error {
 }
 
 func (manager *alertsManager) EscalateAlert(data *alert.EscalateAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	requestBody := make(map[string]interface{})
 	if data.Escalation.ID != "" || data.Escalation.Name != "" {
@@ -219,6 +261,9 @@ func (manager *alertsManager) EscalateAlert(data *alert.EscalateAlertRequest) (*
 }
 
 func (manager *alertsManager) ExecuteCustomAction(data *alert.ExecuteCustomActionRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	requestBody := map[string]interface{}{
 		"action": data.Action,
@@ -241,6 +286,9 @@ func (manager *alertsManager) ExecuteCustomAction(data *alert.ExecuteCustomActio
 }
 
 func (manager *alertsManager) SnoozeAlert(data *alert.SnoozeAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	requestBody := make(map[string]interface{})
 	if data.Until != nil {
@@ -261,6 +309,9 @@ func (manager *alertsManager) SnoozeAlert(data *alert.SnoozeAlertRequest) (*aler
 }
 
 func (manager *alertsManager) UnacknowledgeAlert(data *alert.UnacknowledgeAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	err := manager.post(endpoints.alerts.UnacknowledgeAlert(data.ID), nil, output, nil, http.StatusAccepted)
 	if err != nil {
@@ -270,6 +321,9 @@ func (manager *alertsManager) UnacknowledgeAlert(data *alert.UnacknowledgeAlertR
 }
 
 func (manager *alertsManager) ListAlertNotes(data *alert.ListAlertNotesRequest) (*alert.ListAlertNotesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.ListAlertNotesResult{}
 	_, err := manager.get(endpoints.alerts.ListAlertNotes(data.ID), output, data.RequestParams())
 	if err != nil {
@@ -279,6 +333,9 @@ func (manager *alertsManager) ListAlertNotes(data *alert.ListAlertNotesRequest) 
 }
 
 func (manager *alertsManager) AddAlertNote(data *alert.AddNoteRequest) (*alert.AddNoteResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.AddNoteResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -292,10 +349,16 @@ func (manager *alertsManager) AddAlertNote(data *alert.AddNoteRequest) (*alert.A
 }
 
 func (manager *alertsManager) DeleteAlertNote(data *alert.DeleteAlertNoteRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.alerts.DeleteAlertNote(data.AlertID, data.NoteID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *alertsManager) UpdateAlertNote(data *alert.UpdateAlertNoteRequest) (*alert.AlertNote, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.AlertNote{}
 	requestBody := map[string]interface{}{
 		"note": data.Note,
@@ -312,6 +375,9 @@ func (manager *alertsManager) UpdateAlertNote(data *alert.UpdateAlertNoteRequest
 }
 
 func (manager *alertsManager) UpdateAlertPriority(data *alert.UpdateAlertPriorityRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -325,6 +391,9 @@ func (manager *alertsManager) UpdateAlertPriority(data *alert.UpdateAlertPriorit
 }
 
 func (manager *alertsManager) UpdateAlertMessage(data *alert.UpdateAlertMessageRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -338,6 +407,9 @@ func (manager *alertsManager) UpdateAlertMessage(data *alert.UpdateAlertMessageR
 }
 
 func (manager *alertsManager) UpdateAlertDescription(data *alert.UpdateAlertDescriptionRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -351,6 +423,9 @@ func (manager *alertsManager) UpdateAlertDescription(data *alert.UpdateAlertDesc
 }
 
 func (manager *alertsManager) ListAlertLogs(data *alert.ListAlertLogsRequest) (*alert.ListAlertLogsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.ListAlertLogsResult{}
 	_, err := manager.get(endpoints.alerts.ListAlertLogs(data.ID), output, data.RequestParams())
 	if err != nil {
@@ -360,6 +435,9 @@ func (manager *alertsManager) ListAlertLogs(data *alert.ListAlertLogsRequest) (*
 }
 
 func (manager *alertsManager) ListAlerts(data *alert.ListAlertsRequest) (*alert.ListAlertsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &alert.ListAlertsResult{}
 
 	_, err := manager.get(endpoints.alerts.ListAlerts, output, data.RequestParams())

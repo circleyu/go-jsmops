@@ -1,6 +1,7 @@
 package jsmops
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -55,6 +56,9 @@ const (
 	LogDebug
 )
 
+// ErrManagerNotRegistered is returned when a manager method is called but the required authentication is not provided
+var ErrManagerNotRegistered = errors.New("manager not registered: authentication credentials not provided")
+
 // ClientOptions ...
 type ClientOptions struct {
 	Level  LogLevel
@@ -77,7 +81,15 @@ func NewOptions() *ClientOptions {
 // apiToken: API token for Basic Authentication (used for regular APIs)
 // userName: Username/email for Basic Authentication (used for regular APIs)
 // apiKey: Optional API key for Integration Events API (GenieKey). Empty string means Integration Events API is not used.
-func Init(cloudID, apiToken, userName string, apiKey string, options *ClientOptions) *APIClient {
+// Returns an error if neither Basic Auth nor GenieKey is provided.
+func Init(cloudID, apiToken, userName string, apiKey string, options *ClientOptions) (*APIClient, error) {
+	// Validate that at least one authentication method is provided
+	hasBasicAuth := userName != "" && apiToken != ""
+	hasGenieKey := apiKey != ""
+	if !hasBasicAuth && !hasGenieKey {
+		return nil, errors.New("at least one authentication method must be provided: either Basic Auth (userName and apiToken) or API Integration (apiKey)")
+	}
+
 	client := &APIClient{
 		cloudID:  cloudID,
 		userName: userName,
@@ -88,47 +100,55 @@ func Init(cloudID, apiToken, userName string, apiKey string, options *ClientOpti
 		client.logger = options.Logger
 		client.logLevel = options.Level
 	}
+
+	// Update logging to reflect actual authentication methods
 	if client.logger != nil {
-		client.logger.Infof("JSM ops Client initializing..., authorization = Basic Auth (user: %s)", userName)
-		if apiKey != "" {
-			client.logger.Infof("Integration Events API enabled with GenieKey")
+		if hasBasicAuth && hasGenieKey {
+			client.logger.Infof("JSM ops Client initializing..., authorization = Basic Auth (user: %s) and Integration Events API (GenieKey)", userName)
+		} else if hasBasicAuth {
+			client.logger.Infof("JSM ops Client initializing..., authorization = Basic Auth (user: %s)", userName)
+		} else if hasGenieKey {
+			client.logger.Infof("JSM ops Client initializing..., authorization = Integration Events API (GenieKey)")
 		}
 	}
 
-	client.Alert = newAlertsManager(client)
-	client.AuditLogs = newAuditLogsManager(client)
-	client.Contacts = newContactsManager(client)
-	client.Teams = newTeamsManager(client)
-	client.Roles = newRolesManager(client)
-	client.Escalations = newEscalationsManager(client)
-	client.ForwardingRules = newForwardingRulesManager(client)
-	client.Heartbeats = newHeartbeatsManager(client)
-	client.Integrations = newIntegrationsManager(client)
-	client.IntegrationActions = newIntegrationActionsManager(client)
-	client.IntegrationFilters = newIntegrationFiltersManager(client)
-	client.Maintenances = newMaintenancesManager(client)
-	client.NotificationRules = newNotificationRulesManager(client)
-	client.NotificationRuleSteps = newNotificationRuleStepsManager(client)
-	client.Policies = newPoliciesManager(client)
-	client.TeamPolicies = newTeamPoliciesManager(client)
-	client.TeamRoles = newTeamRolesManager(client)
-	client.RoutingRules = newRoutingRulesManager(client)
-	client.Schedules = newSchedulesManager(client)
-	client.SchedulesOnCalls = newSchedulesOnCallsManager(client)
-	client.SchedulesOverrides = newSchedulesOverridesManager(client)
-	client.SchedulesRotations = newSchedulesRotationsManager(client)
-	client.SchedulesTimelines = newSchedulesTimelinesManager(client)
-	client.Syncs = newSyncsManager(client)
-	client.SyncsActions = newSyncsActionsManager(client)
-	client.SyncsActionGroups = newSyncsActionGroupsManager(client)
-	client.JEC = newJECManager(client)
+	// Conditionally register standard JSM Operations API managers (only if Basic Auth is provided)
+	if hasBasicAuth {
+		client.Alert = newAlertsManager(client)
+		client.AuditLogs = newAuditLogsManager(client)
+		client.Contacts = newContactsManager(client)
+		client.Teams = newTeamsManager(client)
+		client.Roles = newRolesManager(client)
+		client.Escalations = newEscalationsManager(client)
+		client.ForwardingRules = newForwardingRulesManager(client)
+		client.Heartbeats = newHeartbeatsManager(client)
+		client.Integrations = newIntegrationsManager(client)
+		client.IntegrationActions = newIntegrationActionsManager(client)
+		client.IntegrationFilters = newIntegrationFiltersManager(client)
+		client.Maintenances = newMaintenancesManager(client)
+		client.NotificationRules = newNotificationRulesManager(client)
+		client.NotificationRuleSteps = newNotificationRuleStepsManager(client)
+		client.Policies = newPoliciesManager(client)
+		client.TeamPolicies = newTeamPoliciesManager(client)
+		client.TeamRoles = newTeamRolesManager(client)
+		client.RoutingRules = newRoutingRulesManager(client)
+		client.Schedules = newSchedulesManager(client)
+		client.SchedulesOnCalls = newSchedulesOnCallsManager(client)
+		client.SchedulesOverrides = newSchedulesOverridesManager(client)
+		client.SchedulesRotations = newSchedulesRotationsManager(client)
+		client.SchedulesTimelines = newSchedulesTimelinesManager(client)
+		client.Syncs = newSyncsManager(client)
+		client.SyncsActions = newSyncsActionsManager(client)
+		client.SyncsActionGroups = newSyncsActionGroupsManager(client)
+		client.JEC = newJECManager(client)
+	}
 
 	// Register Integration Events manager only if apiKey is provided
-	if apiKey != "" {
+	if hasGenieKey {
 		client.IntegrationEvents = newIntegrationEventsManager(client)
 	}
 
-	return client
+	return client, nil
 }
 
 // func (client *APIClient) logErr(err error) {
@@ -188,4 +208,20 @@ func (client *APIClient) logRes(res *http.Response) {
 func (client *APIClient) BackupJSON(fileName string, data interface{}) error {
 	backupJSON, _ := sonic.Marshal(data)
 	return os.WriteFile(fileName, backupJSON, 0644)
+}
+
+// checkBasicAuth checks if Basic Authentication credentials are available
+func (c *APIClient) checkBasicAuth() error {
+	if c.userName == "" || c.apiToken == "" {
+		return ErrManagerNotRegistered
+	}
+	return nil
+}
+
+// checkGenieKey checks if GenieKey (API Integration) credentials are available
+func (c *APIClient) checkGenieKey() error {
+	if c.apiKey == "" {
+		return ErrManagerNotRegistered
+	}
+	return nil
 }

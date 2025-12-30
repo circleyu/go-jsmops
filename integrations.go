@@ -26,6 +26,9 @@ func newIntegrationsManager(client *APIClient) *integrationsManager {
 }
 
 func (manager *integrationsManager) ListIntegrations(data *integrations.ListIntegrationsRequest) (*integrations.ListIntegrationsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &integrations.ListIntegrationsResult{}
 	_, err := manager.get(endpoints.integrations.ListIntegrations, output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *integrationsManager) ListIntegrations(data *integrations.ListInte
 }
 
 func (manager *integrationsManager) CreateIntegration(data *integrations.CreateIntegrationRequest) (*integrations.Integration, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &integrations.Integration{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,6 +54,9 @@ func (manager *integrationsManager) CreateIntegration(data *integrations.CreateI
 }
 
 func (manager *integrationsManager) GetIntegration(data *integrations.GetIntegrationRequest) (*integrations.Integration, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &integrations.Integration{}
 	_, err := manager.get(endpoints.integrations.GetIntegration(data.ID), output, nil)
 	if err != nil {
@@ -57,6 +66,9 @@ func (manager *integrationsManager) GetIntegration(data *integrations.GetIntegra
 }
 
 func (manager *integrationsManager) UpdateIntegration(data *integrations.UpdateIntegrationRequest) (*integrations.Integration, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &integrations.Integration{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -77,6 +89,9 @@ func (manager *integrationsManager) UpdateIntegration(data *integrations.UpdateI
 }
 
 func (manager *integrationsManager) DeleteIntegration(data *integrations.DeleteIntegrationRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.integrations.DeleteIntegration(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 

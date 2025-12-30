@@ -25,6 +25,9 @@ func newIntegrationEventsManager(client *APIClient) *integrationEventsManager {
 }
 
 func (manager *integrationEventsManager) CreateAlert(data *alert.IntegrationCreateAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkGenieKey(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -39,6 +42,9 @@ func (manager *integrationEventsManager) CreateAlert(data *alert.IntegrationCrea
 }
 
 func (manager *integrationEventsManager) AcknowledgeAlert(data *alert.IntegrationAcknowledgeAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkGenieKey(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -55,6 +61,9 @@ func (manager *integrationEventsManager) AcknowledgeAlert(data *alert.Integratio
 }
 
 func (manager *integrationEventsManager) CloseAlert(data *alert.IntegrationCloseAlertRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkGenieKey(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -71,6 +80,9 @@ func (manager *integrationEventsManager) CloseAlert(data *alert.IntegrationClose
 }
 
 func (manager *integrationEventsManager) AddNote(data *alert.IntegrationAddNoteRequest) (*alert.SuccessResponse, error) {
+	if err := manager.checkGenieKey(); err != nil {
+		return nil, err
+	}
 	output := &alert.SuccessResponse{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {

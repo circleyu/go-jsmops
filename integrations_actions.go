@@ -27,6 +27,9 @@ func newIntegrationActionsManager(client *APIClient) *integrationActionsManager 
 }
 
 func (manager *integrationActionsManager) ListIntegrationActions(data *actions.ListIntegrationActionsRequest) (*actions.ListIntegrationActionsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.ListIntegrationActionsResult{}
 	_, err := manager.get(endpoints.integrationActions.ListIntegrationActions(data.IntegrationID), output, data.RequestParams())
 	if err != nil {
@@ -36,6 +39,9 @@ func (manager *integrationActionsManager) ListIntegrationActions(data *actions.L
 }
 
 func (manager *integrationActionsManager) CreateIntegrationAction(data *actions.CreateIntegrationActionRequest) (*actions.IntegrationAction, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.IntegrationAction{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -49,8 +55,14 @@ func (manager *integrationActionsManager) CreateIntegrationAction(data *actions.
 }
 
 func (manager *integrationActionsManager) GetIntegrationAction(data *actions.GetIntegrationActionRequest) (*actions.IntegrationAction, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.IntegrationAction{}
 	_, err := manager.get(endpoints.integrationActions.GetIntegrationAction(data.IntegrationID, data.ID), output, nil)
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +96,9 @@ func (manager *integrationActionsManager) UpdateIntegrationAction(data *actions.
 }
 
 func (manager *integrationActionsManager) DeleteIntegrationAction(data *actions.DeleteIntegrationActionRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.integrationActions.DeleteIntegrationAction(data.IntegrationID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 

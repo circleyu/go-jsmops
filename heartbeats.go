@@ -27,6 +27,9 @@ func newHeartbeatsManager(client *APIClient) *heartbeatsManager {
 }
 
 func (manager *heartbeatsManager) ListHeartbeats(data *heartbeats.ListHeartbeatsRequest) (*heartbeats.ListHeartbeatsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &heartbeats.ListHeartbeatsResult{}
 	_, err := manager.get(endpoints.heartbeats.ListHeartbeats(data.TeamID), output, data.RequestParams())
 	if err != nil {
@@ -36,6 +39,9 @@ func (manager *heartbeatsManager) ListHeartbeats(data *heartbeats.ListHeartbeats
 }
 
 func (manager *heartbeatsManager) CreateHeartbeat(data *heartbeats.CreateHeartbeatRequest) (*heartbeats.Heartbeat, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &heartbeats.Heartbeat{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -49,6 +55,9 @@ func (manager *heartbeatsManager) CreateHeartbeat(data *heartbeats.CreateHeartbe
 }
 
 func (manager *heartbeatsManager) UpdateHeartbeat(data *heartbeats.UpdateHeartbeatRequest) (*heartbeats.Heartbeat, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &heartbeats.Heartbeat{}
 	requestBody := make(map[string]interface{})
 	if data.Description != "" {
@@ -75,6 +84,9 @@ func (manager *heartbeatsManager) UpdateHeartbeat(data *heartbeats.UpdateHeartbe
 }
 
 func (manager *heartbeatsManager) DeleteHeartbeat(data *heartbeats.DeleteHeartbeatRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	query := params.Build()
 	query.Is("name", data.Name)
 	path := endpoints.heartbeats.DeleteHeartbeat(data.TeamID) + "?" + query.URLSafe()
@@ -82,6 +94,9 @@ func (manager *heartbeatsManager) DeleteHeartbeat(data *heartbeats.DeleteHeartbe
 }
 
 func (manager *heartbeatsManager) PingHeartbeat(data *heartbeats.PingHeartbeatRequest) (*heartbeats.PingResponse, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &heartbeats.PingResponse{}
 	query := params.Build()
 	query.Is("name", data.Name)

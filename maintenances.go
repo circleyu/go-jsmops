@@ -33,6 +33,9 @@ func newMaintenancesManager(client *APIClient) *maintenancesManager {
 }
 
 func (manager *maintenancesManager) ListGlobalMaintenances(data *maintenances.ListGlobalMaintenancesRequest) (*maintenances.ListMaintenancesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.ListMaintenancesResult{}
 	_, err := manager.get(endpoints.maintenances.ListGlobalMaintenances, output, data.RequestParams())
 	if err != nil {
@@ -42,6 +45,9 @@ func (manager *maintenancesManager) ListGlobalMaintenances(data *maintenances.Li
 }
 
 func (manager *maintenancesManager) CreateGlobalMaintenance(data *maintenances.CreateGlobalMaintenanceRequest) (*maintenances.Maintenance, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.Maintenance{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -55,6 +61,9 @@ func (manager *maintenancesManager) CreateGlobalMaintenance(data *maintenances.C
 }
 
 func (manager *maintenancesManager) GetGlobalMaintenance(data *maintenances.GetGlobalMaintenanceRequest) (*maintenances.Maintenance, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.Maintenance{}
 	_, err := manager.get(endpoints.maintenances.GetGlobalMaintenance(data.ID), output, nil)
 	if err != nil {
@@ -90,10 +99,16 @@ func (manager *maintenancesManager) UpdateGlobalMaintenance(data *maintenances.U
 }
 
 func (manager *maintenancesManager) DeleteGlobalMaintenance(data *maintenances.DeleteGlobalMaintenanceRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.maintenances.DeleteGlobalMaintenance(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *maintenancesManager) CancelGlobalMaintenance(data *maintenances.CancelGlobalMaintenanceRequest) (*maintenances.Maintenance, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.Maintenance{}
 	err := manager.postJSON(endpoints.maintenances.CancelGlobalMaintenance(data.ID), nil, output, nil, http.StatusOK)
 	if err != nil {
@@ -103,6 +118,9 @@ func (manager *maintenancesManager) CancelGlobalMaintenance(data *maintenances.C
 }
 
 func (manager *maintenancesManager) ListTeamMaintenances(data *maintenances.ListTeamMaintenancesRequest) (*maintenances.ListMaintenancesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.ListMaintenancesResult{}
 	_, err := manager.get(endpoints.maintenances.ListTeamMaintenances(data.TeamID), output, data.RequestParams())
 	if err != nil {
@@ -112,6 +130,9 @@ func (manager *maintenancesManager) ListTeamMaintenances(data *maintenances.List
 }
 
 func (manager *maintenancesManager) CreateTeamMaintenance(data *maintenances.CreateTeamMaintenanceRequest) (*maintenances.Maintenance, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.Maintenance{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -125,6 +146,9 @@ func (manager *maintenancesManager) CreateTeamMaintenance(data *maintenances.Cre
 }
 
 func (manager *maintenancesManager) GetTeamMaintenance(data *maintenances.GetTeamMaintenanceRequest) (*maintenances.Maintenance, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.Maintenance{}
 	_, err := manager.get(endpoints.maintenances.GetTeamMaintenance(data.TeamID, data.ID), output, nil)
 	if err != nil {
@@ -134,6 +158,9 @@ func (manager *maintenancesManager) GetTeamMaintenance(data *maintenances.GetTea
 }
 
 func (manager *maintenancesManager) UpdateTeamMaintenance(data *maintenances.UpdateTeamMaintenanceRequest) (*maintenances.Maintenance, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.Maintenance{}
 	requestBody := make(map[string]interface{})
 	if data.Description != "" {
@@ -160,10 +187,16 @@ func (manager *maintenancesManager) UpdateTeamMaintenance(data *maintenances.Upd
 }
 
 func (manager *maintenancesManager) DeleteTeamMaintenance(data *maintenances.DeleteTeamMaintenanceRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.maintenances.DeleteTeamMaintenance(data.TeamID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *maintenancesManager) CancelTeamMaintenance(data *maintenances.CancelTeamMaintenanceRequest) (*maintenances.Maintenance, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &maintenances.Maintenance{}
 	err := manager.postJSON(endpoints.maintenances.CancelTeamMaintenance(data.TeamID, data.ID), nil, output, nil, http.StatusOK)
 	if err != nil {

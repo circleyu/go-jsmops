@@ -26,6 +26,9 @@ func newTeamRolesManager(client *APIClient) *teamRolesManager {
 }
 
 func (manager *teamRolesManager) ListTeamRoles(data *roles.ListTeamRolesRequest) (*roles.ListTeamRolesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.ListTeamRolesResult{}
 	_, err := manager.get(endpoints.teamRoles.ListTeamRoles(data.TeamID), output, nil)
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *teamRolesManager) ListTeamRoles(data *roles.ListTeamRolesRequest)
 }
 
 func (manager *teamRolesManager) GetTeamRole(data *roles.GetTeamRoleRequest) (*roles.TeamRole, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.TeamRole{}
 	_, err := manager.get(endpoints.teamRoles.GetTeamRole(data.TeamID, data.Identifier), output, data.RequestParams())
 	if err != nil {
@@ -57,6 +63,9 @@ func (manager *teamRolesManager) CreateTeamRole(data *roles.CreateTeamRoleReques
 }
 
 func (manager *teamRolesManager) UpdateTeamRole(data *roles.UpdateTeamRoleRequest) (*roles.TeamRole, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &roles.TeamRole{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -87,6 +96,9 @@ func (manager *teamRolesManager) UpdateTeamRole(data *roles.UpdateTeamRoleReques
 }
 
 func (manager *teamRolesManager) DeleteTeamRole(data *roles.DeleteTeamRoleRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	params := data.RequestParams()
 	var path string
 	if params != nil {

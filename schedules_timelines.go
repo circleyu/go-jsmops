@@ -23,6 +23,9 @@ func newSchedulesTimelinesManager(client *APIClient) *schedulesTimelinesManager 
 }
 
 func (manager *schedulesTimelinesManager) GetScheduleTimeline(data *timelines.GetScheduleTimelineRequest) (*timelines.ScheduleTimeline, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &timelines.ScheduleTimeline{}
 	_, err := manager.get(endpoints.schedulesTimelines.GetScheduleTimeline(data.ScheduleID), output, data.RequestParams())
 	if err != nil {
@@ -32,6 +35,9 @@ func (manager *schedulesTimelinesManager) GetScheduleTimeline(data *timelines.Ge
 }
 
 func (manager *schedulesTimelinesManager) ExportScheduleTimeline(data *timelines.ExportScheduleTimelineRequest) (*bytes.Reader, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	path := fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", manager.cloudID, endpoints.schedulesTimelines.ExportScheduleTimeline(data.ScheduleID))
 	return manager.getFile(path)
 }

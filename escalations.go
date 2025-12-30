@@ -26,6 +26,9 @@ func newEscalationsManager(client *APIClient) *escalationsManager {
 }
 
 func (manager *escalationsManager) ListEscalations(data *escalations.ListEscalationsRequest) (*escalations.ListEscalationsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &escalations.ListEscalationsResult{}
 	_, err := manager.get(endpoints.escalations.ListEscalations(data.TeamID), output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *escalationsManager) ListEscalations(data *escalations.ListEscalat
 }
 
 func (manager *escalationsManager) CreateEscalation(data *escalations.CreateEscalationRequest) (*escalations.Escalation, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &escalations.Escalation{}
 	requestBody := make(map[string]interface{})
 	requestBody["name"] = data.Name
@@ -60,6 +66,9 @@ func (manager *escalationsManager) CreateEscalation(data *escalations.CreateEsca
 }
 
 func (manager *escalationsManager) GetEscalation(data *escalations.GetEscalationRequest) (*escalations.Escalation, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &escalations.Escalation{}
 	_, err := manager.get(endpoints.escalations.GetEscalation(data.TeamID, data.ID), output, nil)
 	if err != nil {
@@ -69,6 +78,9 @@ func (manager *escalationsManager) GetEscalation(data *escalations.GetEscalation
 }
 
 func (manager *escalationsManager) UpdateEscalation(data *escalations.UpdateEscalationRequest) (*escalations.Escalation, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &escalations.Escalation{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -98,6 +110,9 @@ func (manager *escalationsManager) UpdateEscalation(data *escalations.UpdateEsca
 }
 
 func (manager *escalationsManager) DeleteEscalation(data *escalations.DeleteEscalationRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.escalations.DeleteEscalation(data.TeamID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 

@@ -29,6 +29,9 @@ func newTeamPoliciesManager(client *APIClient) *teamPoliciesManager {
 }
 
 func (manager *teamPoliciesManager) ListTeamPolicies(data *policies.ListTeamPoliciesRequest) (*policies.ListTeamPoliciesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.ListTeamPoliciesResult{}
 	_, err := manager.get(endpoints.teamPolicies.ListTeamPolicies(data.TeamID), output, data.RequestParams())
 	if err != nil {
@@ -38,6 +41,9 @@ func (manager *teamPoliciesManager) ListTeamPolicies(data *policies.ListTeamPoli
 }
 
 func (manager *teamPoliciesManager) CreateTeamPolicy(data *policies.CreateTeamPolicyRequest) (*policies.TeamPolicy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.TeamPolicy{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -51,6 +57,9 @@ func (manager *teamPoliciesManager) CreateTeamPolicy(data *policies.CreateTeamPo
 }
 
 func (manager *teamPoliciesManager) GetTeamPolicy(data *policies.GetTeamPolicyRequest) (*policies.TeamPolicy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.TeamPolicy{}
 	_, err := manager.get(endpoints.teamPolicies.GetTeamPolicy(data.TeamID, data.PolicyID), output, nil)
 	if err != nil {
@@ -89,10 +98,16 @@ func (manager *teamPoliciesManager) PutTeamPolicy(data *policies.PutTeamPolicyRe
 }
 
 func (manager *teamPoliciesManager) DeleteTeamPolicy(data *policies.DeleteTeamPolicyRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.teamPolicies.DeleteTeamPolicy(data.TeamID, data.PolicyID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *teamPoliciesManager) ChangeOrderTeamPolicy(data *policies.ChangeOrderTeamPolicyRequest) (*policies.TeamPolicy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.TeamPolicy{}
 	requestBody := map[string]interface{}{
 		"order": data.Order,
@@ -109,6 +124,9 @@ func (manager *teamPoliciesManager) ChangeOrderTeamPolicy(data *policies.ChangeO
 }
 
 func (manager *teamPoliciesManager) EnableTeamPolicy(data *policies.EnableTeamPolicyRequest) (*policies.TeamPolicy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.TeamPolicy{}
 	err := manager.postJSON(endpoints.teamPolicies.EnableTeamPolicy(data.TeamID, data.PolicyID), nil, output, nil, http.StatusOK)
 	if err != nil {
@@ -118,6 +136,9 @@ func (manager *teamPoliciesManager) EnableTeamPolicy(data *policies.EnableTeamPo
 }
 
 func (manager *teamPoliciesManager) DisableTeamPolicy(data *policies.DisableTeamPolicyRequest) (*policies.TeamPolicy, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &policies.TeamPolicy{}
 	err := manager.postJSON(endpoints.teamPolicies.DisableTeamPolicy(data.TeamID, data.PolicyID), nil, output, nil, http.StatusOK)
 	if err != nil {

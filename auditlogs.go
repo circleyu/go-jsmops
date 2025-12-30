@@ -19,6 +19,9 @@ func newAuditLogsManager(client *APIClient) *auditLogsManager {
 }
 
 func (manager *auditLogsManager) GetAuditLogs(data *auditlogs.GetAuditLogsRequest) (*auditlogs.ListAuditLogsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &auditlogs.ListAuditLogsResult{}
 	_, err := manager.get(endpoints.auditLogs.GetAuditLogs, output, data.RequestParams())
 	if err != nil {

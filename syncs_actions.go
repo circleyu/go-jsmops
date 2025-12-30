@@ -27,6 +27,9 @@ func newSyncsActionsManager(client *APIClient) *syncsActionsManager {
 }
 
 func (manager *syncsActionsManager) ListSyncActions(data *actions.ListSyncActionsRequest) (*actions.ListSyncActionsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.ListSyncActionsResult{}
 	_, err := manager.get(endpoints.syncsActions.ListSyncActions(data.SyncID), output, data.RequestParams())
 	if err != nil {
@@ -36,6 +39,9 @@ func (manager *syncsActionsManager) ListSyncActions(data *actions.ListSyncAction
 }
 
 func (manager *syncsActionsManager) CreateSyncAction(data *actions.CreateSyncActionRequest) (*actions.SyncAction, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.SyncAction{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -45,10 +51,16 @@ func (manager *syncsActionsManager) CreateSyncAction(data *actions.CreateSyncAct
 	if err != nil {
 		return nil, err
 	}
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	return output, nil
 }
 
 func (manager *syncsActionsManager) GetSyncAction(data *actions.GetSyncActionRequest) (*actions.SyncAction, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.SyncAction{}
 	_, err := manager.get(endpoints.syncsActions.GetSyncAction(data.SyncID, data.ID), output, nil)
 	if err != nil {
@@ -58,6 +70,9 @@ func (manager *syncsActionsManager) GetSyncAction(data *actions.GetSyncActionReq
 }
 
 func (manager *syncsActionsManager) UpdateSyncAction(data *actions.UpdateSyncActionRequest) (*actions.SyncAction, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.SyncAction{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -87,10 +102,16 @@ func (manager *syncsActionsManager) UpdateSyncAction(data *actions.UpdateSyncAct
 }
 
 func (manager *syncsActionsManager) DeleteSyncAction(data *actions.DeleteSyncActionRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.syncsActions.DeleteSyncAction(data.SyncID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *syncsActionsManager) ReorderSyncAction(data *actions.ReorderSyncActionRequest) (*actions.SyncAction, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actions.SyncAction{}
 	requestBody := map[string]interface{}{
 		"order": data.Order,

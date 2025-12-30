@@ -30,7 +30,10 @@ func main() {
 		Logger: logger,
 	}
 
-	client := jsmops.Init(cloudID, apiToken, userName, apiKey, options)
+	client, err := jsmops.Init(cloudID, apiToken, userName, apiKey, options)
+	if err != nil {
+		log.Fatalf("初始化客戶端失敗: %v", err)
+	}
 
 	// 範例 1: 列出警報
 	fmt.Println("=== 列出警報 ===")

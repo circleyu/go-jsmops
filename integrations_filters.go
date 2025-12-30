@@ -23,6 +23,9 @@ func newIntegrationFiltersManager(client *APIClient) *integrationFiltersManager 
 }
 
 func (manager *integrationFiltersManager) GetIntegrationAlertFilter(data *filters.GetIntegrationAlertFilterRequest) (*filters.IntegrationAlertFilter, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &filters.IntegrationAlertFilter{}
 	_, err := manager.get(endpoints.integrationFilters.GetIntegrationAlertFilter(data.IntegrationID), output, nil)
 	if err != nil {
@@ -32,6 +35,9 @@ func (manager *integrationFiltersManager) GetIntegrationAlertFilter(data *filter
 }
 
 func (manager *integrationFiltersManager) UpdateIntegrationAlertFilter(data *filters.UpdateIntegrationAlertFilterRequest) (*filters.IntegrationAlertFilter, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &filters.IntegrationAlertFilter{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {

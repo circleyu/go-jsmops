@@ -27,6 +27,9 @@ func newSyncsActionGroupsManager(client *APIClient) *syncsActionGroupsManager {
 }
 
 func (manager *syncsActionGroupsManager) ListSyncActionGroups(data *actiongroups.ListSyncActionGroupsRequest) (*actiongroups.ListSyncActionGroupsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actiongroups.ListSyncActionGroupsResult{}
 	_, err := manager.get(endpoints.syncsActionGroups.ListSyncActionGroups(data.SyncID), output, data.RequestParams())
 	if err != nil {
@@ -36,6 +39,9 @@ func (manager *syncsActionGroupsManager) ListSyncActionGroups(data *actiongroups
 }
 
 func (manager *syncsActionGroupsManager) CreateSyncActionGroup(data *actiongroups.CreateSyncActionGroupRequest) (*actiongroups.SyncActionGroup, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actiongroups.SyncActionGroup{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -49,6 +55,9 @@ func (manager *syncsActionGroupsManager) CreateSyncActionGroup(data *actiongroup
 }
 
 func (manager *syncsActionGroupsManager) GetSyncActionGroup(data *actiongroups.GetSyncActionGroupRequest) (*actiongroups.SyncActionGroup, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actiongroups.SyncActionGroup{}
 	_, err := manager.get(endpoints.syncsActionGroups.GetSyncActionGroup(data.SyncID, data.ID), output, nil)
 	if err != nil {
@@ -58,6 +67,9 @@ func (manager *syncsActionGroupsManager) GetSyncActionGroup(data *actiongroups.G
 }
 
 func (manager *syncsActionGroupsManager) UpdateSyncActionGroup(data *actiongroups.UpdateSyncActionGroupRequest) (*actiongroups.SyncActionGroup, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actiongroups.SyncActionGroup{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -84,10 +96,16 @@ func (manager *syncsActionGroupsManager) UpdateSyncActionGroup(data *actiongroup
 }
 
 func (manager *syncsActionGroupsManager) DeleteSyncActionGroup(data *actiongroups.DeleteSyncActionGroupRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.syncsActionGroups.DeleteSyncActionGroup(data.SyncID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *syncsActionGroupsManager) ReorderSyncActionGroup(data *actiongroups.ReorderSyncActionGroupRequest) (*actiongroups.SyncActionGroup, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &actiongroups.SyncActionGroup{}
 	requestBody := map[string]interface{}{
 		"order": data.Order,

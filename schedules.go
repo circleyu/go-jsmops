@@ -26,6 +26,9 @@ func newSchedulesManager(client *APIClient) *schedulesManager {
 }
 
 func (manager *schedulesManager) ListSchedules(data *schedules.ListSchedulesRequest) (*schedules.ListSchedulesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &schedules.ListSchedulesResult{}
 	_, err := manager.get(endpoints.schedules.ListSchedules, output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *schedulesManager) ListSchedules(data *schedules.ListSchedulesRequ
 }
 
 func (manager *schedulesManager) CreateSchedule(data *schedules.CreateScheduleRequest) (*schedules.Schedule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &schedules.Schedule{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,6 +54,9 @@ func (manager *schedulesManager) CreateSchedule(data *schedules.CreateScheduleRe
 }
 
 func (manager *schedulesManager) GetSchedule(data *schedules.GetScheduleRequest) (*schedules.Schedule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &schedules.Schedule{}
 	_, err := manager.get(endpoints.schedules.GetSchedule(data.ID), output, nil)
 	if err != nil {
@@ -57,6 +66,9 @@ func (manager *schedulesManager) GetSchedule(data *schedules.GetScheduleRequest)
 }
 
 func (manager *schedulesManager) UpdateSchedule(data *schedules.UpdateScheduleRequest) (*schedules.Schedule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &schedules.Schedule{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -86,6 +98,9 @@ func (manager *schedulesManager) UpdateSchedule(data *schedules.UpdateScheduleRe
 }
 
 func (manager *schedulesManager) DeleteSchedule(data *schedules.DeleteScheduleRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.schedules.DeleteSchedule(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 

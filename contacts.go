@@ -28,6 +28,9 @@ func newContactsManager(client *APIClient) *contactsManager {
 }
 
 func (manager *contactsManager) ListContacts(data *contacts.ListContactsRequest) (*contacts.ListContactsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &contacts.ListContactsResult{}
 	_, err := manager.get(endpoints.contacts.ListContacts, output, data.RequestParams())
 	if err != nil {
@@ -37,6 +40,9 @@ func (manager *contactsManager) ListContacts(data *contacts.ListContactsRequest)
 }
 
 func (manager *contactsManager) CreateContact(data *contacts.CreateContactRequest) (*contacts.Contact, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &contacts.Contact{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -50,6 +56,9 @@ func (manager *contactsManager) CreateContact(data *contacts.CreateContactReques
 }
 
 func (manager *contactsManager) GetContact(data *contacts.GetContactRequest) (*contacts.Contact, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &contacts.Contact{}
 	_, err := manager.get(endpoints.contacts.GetContact(data.ID), output, nil)
 	if err != nil {
@@ -59,10 +68,16 @@ func (manager *contactsManager) GetContact(data *contacts.GetContactRequest) (*c
 }
 
 func (manager *contactsManager) DeleteContact(data *contacts.DeleteContactRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.contacts.DeleteContact(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *contactsManager) UpdateContact(data *contacts.UpdateContactRequest) (*contacts.Contact, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &contacts.Contact{}
 	requestBody := map[string]interface{}{
 		"value": data.Value,
@@ -79,6 +94,9 @@ func (manager *contactsManager) UpdateContact(data *contacts.UpdateContactReques
 }
 
 func (manager *contactsManager) ActivateContact(data *contacts.ActivateContactRequest) (*contacts.Contact, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &contacts.Contact{}
 	err := manager.patch(endpoints.contacts.ActivateContact(data.ID), nil, output, http.StatusOK)
 	if err != nil {
@@ -88,6 +106,9 @@ func (manager *contactsManager) ActivateContact(data *contacts.ActivateContactRe
 }
 
 func (manager *contactsManager) DeactivateContact(data *contacts.DeactivateContactRequest) (*contacts.Contact, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &contacts.Contact{}
 	err := manager.patch(endpoints.contacts.DeactivateContact(data.ID), nil, output, http.StatusOK)
 	if err != nil {

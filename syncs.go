@@ -26,6 +26,9 @@ func newSyncsManager(client *APIClient) *syncsManager {
 }
 
 func (manager *syncsManager) ListSyncs(data *syncs.ListSyncsRequest) (*syncs.ListSyncsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &syncs.ListSyncsResult{}
 	_, err := manager.get(endpoints.syncs.ListSyncs, output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *syncsManager) ListSyncs(data *syncs.ListSyncsRequest) (*syncs.Lis
 }
 
 func (manager *syncsManager) CreateSync(data *syncs.CreateSyncRequest) (*syncs.Sync, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &syncs.Sync{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,6 +54,9 @@ func (manager *syncsManager) CreateSync(data *syncs.CreateSyncRequest) (*syncs.S
 }
 
 func (manager *syncsManager) GetSync(data *syncs.GetSyncRequest) (*syncs.Sync, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &syncs.Sync{}
 	_, err := manager.get(endpoints.syncs.GetSync(data.ID), output, nil)
 	if err != nil {
@@ -57,6 +66,9 @@ func (manager *syncsManager) GetSync(data *syncs.GetSyncRequest) (*syncs.Sync, e
 }
 
 func (manager *syncsManager) UpdateSync(data *syncs.UpdateSyncRequest) (*syncs.Sync, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &syncs.Sync{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -83,6 +95,9 @@ func (manager *syncsManager) UpdateSync(data *syncs.UpdateSyncRequest) (*syncs.S
 }
 
 func (manager *syncsManager) DeleteSync(data *syncs.DeleteSyncRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.syncs.DeleteSync(data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 

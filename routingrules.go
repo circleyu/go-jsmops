@@ -27,6 +27,9 @@ func newRoutingRulesManager(client *APIClient) *routingRulesManager {
 }
 
 func (manager *routingRulesManager) ListRoutingRules(data *routingrules.ListRoutingRulesRequest) (*routingrules.ListRoutingRulesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &routingrules.ListRoutingRulesResult{}
 	_, err := manager.get(endpoints.routingRules.ListRoutingRules(data.TeamID), output, data.RequestParams())
 	if err != nil {
@@ -36,6 +39,9 @@ func (manager *routingRulesManager) ListRoutingRules(data *routingrules.ListRout
 }
 
 func (manager *routingRulesManager) CreateRoutingRule(data *routingrules.CreateRoutingRuleRequest) (*routingrules.RoutingRule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &routingrules.RoutingRule{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -49,6 +55,9 @@ func (manager *routingRulesManager) CreateRoutingRule(data *routingrules.CreateR
 }
 
 func (manager *routingRulesManager) GetRoutingRule(data *routingrules.GetRoutingRuleRequest) (*routingrules.RoutingRule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &routingrules.RoutingRule{}
 	_, err := manager.get(endpoints.routingRules.GetRoutingRule(data.TeamID, data.ID), output, nil)
 	if err != nil {
@@ -58,6 +67,9 @@ func (manager *routingRulesManager) GetRoutingRule(data *routingrules.GetRouting
 }
 
 func (manager *routingRulesManager) UpdateRoutingRule(data *routingrules.UpdateRoutingRuleRequest) (*routingrules.RoutingRule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &routingrules.RoutingRule{}
 	requestBody := make(map[string]interface{})
 	if data.Name != "" {
@@ -87,10 +99,16 @@ func (manager *routingRulesManager) UpdateRoutingRule(data *routingrules.UpdateR
 }
 
 func (manager *routingRulesManager) DeleteRoutingRule(data *routingrules.DeleteRoutingRuleRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.routingRules.DeleteRoutingRule(data.TeamID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
 func (manager *routingRulesManager) ChangeOrderRoutingRule(data *routingrules.ChangeOrderRoutingRuleRequest) (*routingrules.RoutingRule, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &routingrules.RoutingRule{}
 	requestBody := map[string]interface{}{
 		"order": data.Order,

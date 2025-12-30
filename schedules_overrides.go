@@ -26,6 +26,9 @@ func newSchedulesOverridesManager(client *APIClient) *schedulesOverridesManager 
 }
 
 func (manager *schedulesOverridesManager) ListOverrides(data *overrides.ListOverridesRequest) (*overrides.ListOverridesResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &overrides.ListOverridesResult{}
 	_, err := manager.get(endpoints.schedulesOverrides.ListOverrides(data.ScheduleID), output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *schedulesOverridesManager) ListOverrides(data *overrides.ListOver
 }
 
 func (manager *schedulesOverridesManager) CreateOverride(data *overrides.CreateOverrideRequest) (*overrides.Override, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &overrides.Override{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,6 +54,9 @@ func (manager *schedulesOverridesManager) CreateOverride(data *overrides.CreateO
 }
 
 func (manager *schedulesOverridesManager) GetOverride(data *overrides.GetOverrideRequest) (*overrides.Override, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &overrides.Override{}
 	_, err := manager.get(endpoints.schedulesOverrides.GetOverride(data.ScheduleID, data.Alias), output, nil)
 	if err != nil {
@@ -57,6 +66,9 @@ func (manager *schedulesOverridesManager) GetOverride(data *overrides.GetOverrid
 }
 
 func (manager *schedulesOverridesManager) UpdateOverride(data *overrides.UpdateOverrideRequest) (*overrides.Override, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &overrides.Override{}
 	requestBody := make(map[string]interface{})
 	if data.StartTime != "" {
@@ -80,6 +92,9 @@ func (manager *schedulesOverridesManager) UpdateOverride(data *overrides.UpdateO
 }
 
 func (manager *schedulesOverridesManager) DeleteOverride(data *overrides.DeleteOverrideRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.schedulesOverrides.DeleteOverride(data.ScheduleID, data.Alias), nil, http.StatusNoContent, http.StatusOK)
 }
 

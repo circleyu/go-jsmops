@@ -24,6 +24,9 @@ func newSchedulesOnCallsManager(client *APIClient) *schedulesOnCallsManager {
 }
 
 func (manager *schedulesOnCallsManager) ListOnCallResponders(data *oncalls.ListOnCallRespondersRequest) (*oncalls.ListOnCallRespondersResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &oncalls.ListOnCallRespondersResult{}
 	_, err := manager.get(endpoints.schedulesOnCalls.ListOnCallResponders(data.ScheduleID), output, data.RequestParams())
 	if err != nil {
@@ -33,6 +36,9 @@ func (manager *schedulesOnCallsManager) ListOnCallResponders(data *oncalls.ListO
 }
 
 func (manager *schedulesOnCallsManager) ListNextOnCallResponders(data *oncalls.ListNextOnCallRespondersRequest) (*oncalls.ListOnCallRespondersResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &oncalls.ListOnCallRespondersResult{}
 	_, err := manager.get(endpoints.schedulesOnCalls.ListNextOnCallResponders(data.ScheduleID), output, data.RequestParams())
 	if err != nil {
@@ -42,6 +48,9 @@ func (manager *schedulesOnCallsManager) ListNextOnCallResponders(data *oncalls.L
 }
 
 func (manager *schedulesOnCallsManager) ExportOnCallResponders(data *oncalls.ExportOnCallRespondersRequest) (*bytes.Reader, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	path := fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", manager.cloudID, endpoints.schedulesOnCalls.ExportOnCallResponders(data.UserIdentifier))
 	return manager.getFile(path)
 }

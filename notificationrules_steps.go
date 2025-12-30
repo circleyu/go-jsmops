@@ -26,6 +26,9 @@ func newNotificationRuleStepsManager(client *APIClient) *notificationRuleStepsMa
 }
 
 func (manager *notificationRuleStepsManager) ListNotificationRuleSteps(data *steps.ListNotificationRuleStepsRequest) (*steps.ListNotificationRuleStepsResult, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &steps.ListNotificationRuleStepsResult{}
 	_, err := manager.get(endpoints.notificationRuleSteps.ListNotificationRuleSteps(data.RuleID), output, data.RequestParams())
 	if err != nil {
@@ -35,6 +38,9 @@ func (manager *notificationRuleStepsManager) ListNotificationRuleSteps(data *ste
 }
 
 func (manager *notificationRuleStepsManager) CreateNotificationRuleStep(data *steps.CreateNotificationRuleStepRequest) (*steps.NotificationRuleStep, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &steps.NotificationRuleStep{}
 	jsonb, err := sonic.Marshal(data)
 	if err != nil {
@@ -48,9 +54,15 @@ func (manager *notificationRuleStepsManager) CreateNotificationRuleStep(data *st
 }
 
 func (manager *notificationRuleStepsManager) GetNotificationRuleStep(data *steps.GetNotificationRuleStepRequest) (*steps.NotificationRuleStep, error) {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 	output := &steps.NotificationRuleStep{}
 	_, err := manager.get(endpoints.notificationRuleSteps.GetNotificationRuleStep(data.RuleID, data.ID), output, nil)
 	if err != nil {
+	if err := manager.checkBasicAuth(); err != nil {
+		return nil, err
+	}
 		return nil, err
 	}
 	return output, nil
@@ -86,6 +98,9 @@ func (manager *notificationRuleStepsManager) UpdateNotificationRuleStep(data *st
 }
 
 func (manager *notificationRuleStepsManager) DeleteNotificationRuleStep(data *steps.DeleteNotificationRuleStepRequest) error {
+	if err := manager.checkBasicAuth(); err != nil {
+		return err
+	}
 	return manager.delete(endpoints.notificationRuleSteps.DeleteNotificationRuleStep(data.RuleID, data.ID), nil, http.StatusNoContent, http.StatusOK)
 }
 
