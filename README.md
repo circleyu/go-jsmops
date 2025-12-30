@@ -45,7 +45,7 @@
 ## 安裝
 
 ```bash
-go get github.com/circleyu/go-jsmops/v2@v2.0.0
+go get github.com/circleyu/go-jsmops/v2@v2.1.0
 ```
 
 ## 認證方式
@@ -171,6 +171,51 @@ func main() {
     }
     
     fmt.Printf("警報創建請求已提交: %s\n", createResult.RequestID)
+    
+    // 範例：確認警報
+    ackReq := &alert.IntegrationAcknowledgeAlertRequest{
+        IdentifierType:  alert.ALERTID,
+        IdentifierValue: "alert-id-here",
+        User:            "John Smith",
+        Source:          "MonitoringTool",
+        Note:            "正在處理此警報",
+    }
+    
+    ackResult, err := client.IntegrationEvents.AcknowledgeAlert(ackReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("警報確認請求已提交: %s\n", ackResult.RequestID)
+    
+    // 範例：關閉警報
+    closeReq := &alert.IntegrationCloseAlertRequest{
+        IdentifierType:  alert.ALERTID,
+        IdentifierValue: "alert-id-here",
+        User:            "John Smith",
+        Source:          "MonitoringTool",
+        Note:            "問題已解決",
+    }
+    
+    closeResult, err := client.IntegrationEvents.CloseAlert(closeReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("警報關閉請求已提交: %s\n", closeResult.RequestID)
+    
+    // 範例：添加備註
+    noteReq := &alert.IntegrationAddNoteRequest{
+        IdentifierType:  alert.ALERTID,
+        IdentifierValue: "alert-id-here",
+        User:            "John Smith",
+        Source:          "MonitoringTool",
+        Note:            "這是通過 Integration Events API 添加的備註",
+    }
+    
+    noteResult, err := client.IntegrationEvents.AddNote(noteReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("備註添加請求已提交: %s\n", noteResult.RequestID)
 }
 ```
 
@@ -185,6 +230,36 @@ client := jsmops.Init(
     jsmops.EmptyOptions(),
 )
 ```
+
+## Integration Events API
+
+Integration Events API 是一個特殊的 API 端點集合，用於從外部系統（如監控工具）創建和管理警報。這些 API 使用 GenieKey 認證，不需要 cloudID。
+
+### 支援的操作
+
+- **CreateAlert** - 創建新警報
+- **AcknowledgeAlert** - 確認警報
+- **CloseAlert** - 關閉警報
+- **AddNote** - 添加備註到警報
+
+### 重要差異
+
+Integration Events API 與普通 Alerts API 的主要差異：
+
+1. **認證方式**：使用 GenieKey 而不是 Basic Auth
+2. **路徑**：`/jsm/ops/integration/v2/...` 而不是 `/jsm/ops/api/{cloudId}/v1/...`
+3. **請求結構**：
+   - `IntegrationCreateAlertRequest` 使用 `details`（`map[string]string`）而不是 `extraProperties`（`map[string]interface{}`）
+   - 所有請求都包含 `user`, `source`, `note` 等欄位
+4. **響應**：返回 202 Accepted，表示請求已提交處理（異步操作）
+
+### 使用場景
+
+Integration Events API 特別適合：
+- 監控系統自動創建警報
+- CI/CD 工具報告構建失敗
+- 自動化腳本管理警報生命週期
+- 第三方整合系統
 
 ## 使用範例
 
@@ -250,15 +325,18 @@ if err != nil {
 
 ```
 go-jsmops/
-├── main.go              # 主客戶端和初始化
-├── http.go              # HTTP 請求處理
-├── endpoints.go         # API 端點定義
-├── alerts.go            # 警報管理
-├── contacts.go          # 聯絡人管理
-├── ...                  # 其他資源管理
-├── alert/               # 警報相關結構
-├── contacts/            # 聯絡人相關結構
-└── examples/            # 使用範例
+├── main.go                        # 主客戶端和初始化
+├── http.go                        # HTTP 請求處理
+├── endpoints.go                   # API 端點定義
+├── alerts.go                      # 警報管理
+├── integration_events.go          # Integration Events API 管理
+├── contacts.go                    # 聯絡人管理
+├── ...                            # 其他資源管理
+├── alert/                         # 警報相關結構
+│   ├── integration_events_request.go  # Integration Events API 請求結構
+│   └── ...                        # 其他警報相關結構
+├── contacts/                      # 聯絡人相關結構
+└── examples/                      # 使用範例
 ```
 
 ### 添加新功能
@@ -276,6 +354,18 @@ go-jsmops/
 
 歡迎提交 Issue 和 Pull Request！
 
+## 版本歷史
+
+### v2.1.0
+- ✅ 恢復 Basic Authentication 用於普通 API
+- ✅ 添加 Integration Events API 支持（使用 GenieKey 認證）
+- ✅ 支援 4 個 Integration Events API 端點：CreateAlert, AcknowledgeAlert, CloseAlert, AddNote
+
+### v2.0.0
+- ✅ 更新模組路徑為 `/v2` 以支持 Go 模組版本管理
+- ✅ 改用 API Integration 認證方式（GenieKey）
+
 ## 相關連結
 
 - [Jira Service Management Operations API 文檔](https://developer.atlassian.com/cloud/jira/service-desk/rest/api-group-operations/)
+- [Integration Events API 文檔](https://developer.atlassian.com/cloud/jira/service-desk-ops/rest/v1/api-group-integration-events/)

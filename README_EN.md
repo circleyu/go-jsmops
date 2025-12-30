@@ -45,7 +45,7 @@ A simple and easy-to-use Go library for calling the Jira Service Management Oper
 ## Installation
 
 ```bash
-go get github.com/circleyu/go-jsmops/v2@v2.0.0
+go get github.com/circleyu/go-jsmops/v2@v2.1.0
 ```
 
 ## Authentication
@@ -171,6 +171,51 @@ func main() {
     }
     
     fmt.Printf("Alert creation request submitted: %s\n", createResult.RequestID)
+    
+    // Example: Acknowledge alert
+    ackReq := &alert.IntegrationAcknowledgeAlertRequest{
+        IdentifierType:  alert.ALERTID,
+        IdentifierValue: "alert-id-here",
+        User:            "John Smith",
+        Source:          "MonitoringTool",
+        Note:            "Working on this alert",
+    }
+    
+    ackResult, err := client.IntegrationEvents.AcknowledgeAlert(ackReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Alert acknowledge request submitted: %s\n", ackResult.RequestID)
+    
+    // Example: Close alert
+    closeReq := &alert.IntegrationCloseAlertRequest{
+        IdentifierType:  alert.ALERTID,
+        IdentifierValue: "alert-id-here",
+        User:            "John Smith",
+        Source:          "MonitoringTool",
+        Note:            "Issue resolved",
+    }
+    
+    closeResult, err := client.IntegrationEvents.CloseAlert(closeReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Alert close request submitted: %s\n", closeResult.RequestID)
+    
+    // Example: Add note
+    noteReq := &alert.IntegrationAddNoteRequest{
+        IdentifierType:  alert.ALERTID,
+        IdentifierValue: "alert-id-here",
+        User:            "John Smith",
+        Source:          "MonitoringTool",
+        Note:            "This is a note added via Integration Events API",
+    }
+    
+    noteResult, err := client.IntegrationEvents.AddNote(noteReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Note add request submitted: %s\n", noteResult.RequestID)
 }
 ```
 
@@ -185,6 +230,36 @@ client := jsmops.Init(
     jsmops.EmptyOptions(),
 )
 ```
+
+## Integration Events API
+
+Integration Events API is a special set of API endpoints designed for creating and managing alerts from external systems (such as monitoring tools). These APIs use GenieKey authentication and do not require cloudID.
+
+### Supported Operations
+
+- **CreateAlert** - Create a new alert
+- **AcknowledgeAlert** - Acknowledge an alert
+- **CloseAlert** - Close an alert
+- **AddNote** - Add a note to an alert
+
+### Key Differences
+
+The main differences between Integration Events API and regular Alerts API:
+
+1. **Authentication**: Uses GenieKey instead of Basic Auth
+2. **Path**: `/jsm/ops/integration/v2/...` instead of `/jsm/ops/api/{cloudId}/v1/...`
+3. **Request Structure**:
+   - `IntegrationCreateAlertRequest` uses `details` (`map[string]string`) instead of `extraProperties` (`map[string]interface{}`)
+   - All requests include fields like `user`, `source`, `note`
+4. **Response**: Returns 202 Accepted, indicating the request has been submitted for processing (asynchronous operation)
+
+### Use Cases
+
+Integration Events API is particularly suitable for:
+- Monitoring systems automatically creating alerts
+- CI/CD tools reporting build failures
+- Automated scripts managing alert lifecycle
+- Third-party integration systems
 
 ## Examples
 
@@ -250,15 +325,18 @@ if err != nil {
 
 ```
 go-jsmops/
-├── main.go              # Main client and initialization
-├── http.go              # HTTP request handling
-├── endpoints.go         # API endpoint definitions
-├── alerts.go            # Alert management
-├── contacts.go          # Contact management
-├── ...                  # Other resource managers
-├── alert/               # Alert-related structures
-├── contacts/            # Contact-related structures
-└── examples/            # Usage examples
+├── main.go                        # Main client and initialization
+├── http.go                        # HTTP request handling
+├── endpoints.go                   # API endpoint definitions
+├── alerts.go                      # Alert management
+├── integration_events.go          # Integration Events API management
+├── contacts.go                    # Contact management
+├── ...                            # Other resource managers
+├── alert/                         # Alert-related structures
+│   ├── integration_events_request.go  # Integration Events API request structures
+│   └── ...                        # Other alert-related structures
+├── contacts/                      # Contact-related structures
+└── examples/                      # Usage examples
 ```
 
 ### Adding New Features
@@ -276,7 +354,19 @@ This project is licensed under the MIT License.
 
 Issues and Pull Requests are welcome!
 
+## Version History
+
+### v2.1.0
+- ✅ Restored Basic Authentication for regular APIs
+- ✅ Added Integration Events API support (using GenieKey authentication)
+- ✅ Supports 4 Integration Events API endpoints: CreateAlert, AcknowledgeAlert, CloseAlert, AddNote
+
+### v2.0.0
+- ✅ Updated module path to `/v2` for Go module versioning support
+- ✅ Switched to API Integration authentication (GenieKey)
+
 ## Related Links
 
 - [Jira Service Management Operations API Documentation](https://developer.atlassian.com/cloud/jira/service-desk/rest/api-group-operations/)
+- [Integration Events API Documentation](https://developer.atlassian.com/cloud/jira/service-desk-ops/rest/v1/api-group-integration-events/)
 
