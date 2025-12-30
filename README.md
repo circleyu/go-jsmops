@@ -15,6 +15,7 @@
 ## 支援的資源類別
 
 - **Alerts** - 警報管理
+- **Integration Events** - Integration Events API（創建、確認、關閉警報、添加備註）
 - **Audit Logs** - 審計日誌
 - **Contacts** - 聯絡人管理
 - **Teams** - 團隊管理
@@ -47,9 +48,22 @@
 go get github.com/circleyu/go-jsmops/v2@v2.0.0
 ```
 
+## 認證方式
+
+本庫支援兩種認證方式：
+
+1. **Basic Authentication**：用於普通 API（`/jsm/ops/api/{cloudId}/v1/...`）
+   - 使用 `userName`（電子郵件）和 `apiToken`（API Token）
+   - 適用於所有標準的 JSM Operations API
+
+2. **API Integration (GenieKey)**：用於 Integration Events API（`/jsm/ops/integration/v2/...`）
+   - 使用 `apiKey`（GenieKey）
+   - 僅用於 Integration Events API（創建、確認、關閉警報、添加備註）
+   - 可選：如果不需要使用 Integration Events API，可以傳入空字串
+
 ## 快速開始
 
-### 基本使用
+### 基本使用（僅 Basic Auth）
 
 ```go
 package main
@@ -64,7 +78,7 @@ import (
 )
 
 func main() {
-    // 初始化客戶端
+    // 初始化客戶端（僅使用 Basic Auth）
     logger := logrus.New()
     logger.SetLevel(logrus.DebugLevel)
     
@@ -75,7 +89,9 @@ func main() {
     
     client := jsmops.Init(
         "your-cloud-id",
-        "your-api-key",
+        "your-api-token",  // API Token for Basic Auth
+        "your-email@example.com",  // Username/Email for Basic Auth
+        "",  // apiKey (空字串表示不使用 Integration Events API)
         options,
     )
     
@@ -94,12 +110,78 @@ func main() {
 }
 ```
 
+### 使用 Integration Events API
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    
+    "github.com/circleyu/go-jsmops/v2"
+    "github.com/circleyu/go-jsmops/v2/alert"
+    "github.com/sirupsen/logrus"
+)
+
+func main() {
+    // 初始化客戶端（同時支援 Basic Auth 和 Integration Events API）
+    logger := logrus.New()
+    logger.SetLevel(logrus.DebugLevel)
+    
+    options := &jsmops.ClientOptions{
+        Level:  jsmops.LogDebug,
+        Logger: logger,
+    }
+    
+    client := jsmops.Init(
+        "your-cloud-id",
+        "your-api-token",  // API Token for Basic Auth
+        "your-email@example.com",  // Username/Email for Basic Auth
+        "your-genie-key",  // GenieKey for Integration Events API
+        options,
+    )
+    
+    // 使用普通 API（使用 Basic Auth）
+    listReq := &alert.ListAlertsRequest{
+        Limit: 10,
+    }
+    
+    result, err := client.Alert.ListAlerts(listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    fmt.Printf("找到 %d 個警報\n", len(result.Alerts))
+    
+    // 使用 Integration Events API（使用 GenieKey）
+    createReq := &alert.IntegrationCreateAlertRequest{
+        Message: "CPU usage exceeded 80%",
+        Details: map[string]string{
+            "server": "server-01",
+            "cpu":    "85%",
+        },
+        Priority: alert.P1,
+        Source:   "MonitoringTool",
+    }
+    
+    createResult, err := client.IntegrationEvents.CreateAlert(createReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    fmt.Printf("警報創建請求已提交: %s\n", createResult.RequestID)
+}
+```
+
 ### 不使用日誌
 
 ```go
 client := jsmops.Init(
     "your-cloud-id",
-    "your-api-key",
+    "your-api-token",
+    "your-email@example.com",
+    "",  // apiKey (空字串表示不使用 Integration Events API)
     jsmops.EmptyOptions(),
 )
 ```
@@ -117,11 +199,26 @@ client := jsmops.Init(
 
 ### 認證
 
-所有 API 請求使用 API Integration 認證（GenieKey）。您需要提供：
-- `cloudID`: Jira Cloud ID
-- `apiKey`: API Integration 的 API Key
+本庫支援兩種認證方式：
 
-要獲取 API Key，請在 Jira Service Management 中設置 API Integration：
+#### Basic Authentication（用於普通 API）
+
+所有標準的 JSM Operations API 使用 Basic Authentication。您需要提供：
+- `cloudID`: Jira Cloud ID
+- `apiToken`: API Token（從 [Atlassian Account Settings](https://id.atlassian.com/manage-profile/security/api-tokens) 獲取）
+- `userName`: 您的電子郵件地址
+
+要獲取 API Token：
+1. 前往 [Atlassian Account Settings](https://id.atlassian.com/manage-profile/security/api-tokens)
+2. 點擊 **Create API token**
+3. 複製生成的 API Token
+
+#### API Integration (GenieKey)（用於 Integration Events API）
+
+Integration Events API 使用 GenieKey 認證。您需要提供：
+- `apiKey`: API Integration 的 API Key（GenieKey）
+
+要獲取 GenieKey，請在 Jira Service Management 中設置 API Integration：
 1. 前往團隊的 Operations 頁面
 2. 選擇 **Integrations** > **Add integration**
 3. 搜索並選擇 "API"
@@ -129,6 +226,8 @@ client := jsmops.Init(
 5. 複製生成的 API Key
 
 API Key 格式為 UUID，例如：`g4ff854d-a14c-46a8-b8f0-0960774319dd`
+
+**注意**：如果不需要使用 Integration Events API，可以將 `apiKey` 參數設為空字串。
 
 ### 錯誤處理
 

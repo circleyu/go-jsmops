@@ -34,7 +34,7 @@ func (c *APIClient) post(path string, body io.Reader, out interface{}, params *p
 		return err
 	}
 
-	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
+	req.SetBasicAuth(c.userName, c.apiToken)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -106,7 +106,7 @@ func (c *APIClient) put(path string, requestBody []byte, out interface{}, expect
 	}
 	req, _ := http.NewRequest(http.MethodPut, fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", c.cloudID, path), bytes.NewReader(requestBody))
 
-	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
+	req.SetBasicAuth(c.userName, c.apiToken)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -183,7 +183,7 @@ func (c *APIClient) get(path string, out interface{}, params *params.Params) (ht
 		return nil, err
 	}
 
-	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
+	req.SetBasicAuth(c.userName, c.apiToken)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -217,7 +217,7 @@ func (c *APIClient) getFile(path string) (*bytes.Reader, error) {
 		return nil, err
 	}
 
-	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
+	req.SetBasicAuth(c.userName, c.apiToken)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -256,7 +256,7 @@ func (c *APIClient) patch(path string, requestBody []byte, out interface{}, expe
 	}
 	req, _ := http.NewRequest(http.MethodPatch, fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", c.cloudID, path), bytes.NewReader(requestBody))
 
-	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
+	req.SetBasicAuth(c.userName, c.apiToken)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -336,7 +336,7 @@ func (c *APIClient) delete(path string, requestBody []byte, expectedStatus ...in
 		return err
 	}
 
-	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
+	req.SetBasicAuth(c.userName, c.apiToken)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -389,6 +389,89 @@ func (c *APIClient) delete(path string, requestBody []byte, expectedStatus ...in
 			fmt.Errorf("received status code %d (%d expected)", res.StatusCode, expectedStatus),
 			apiError,
 		}
+	}
+
+	return nil
+}
+
+// postIntegrationEvent sends a POST request to Integration Events API
+// Uses GenieKey authentication and different base URL (no cloudID needed)
+func (c *APIClient) postIntegrationEvent(path string, requestBody []byte, out interface{}, params *params.Params, expectedStatus ...int) error {
+	httpClient := &http.Client{
+		Timeout: httpClientTimeout,
+	}
+
+	var req *http.Request
+	var err error
+
+	baseURL := "https://api.atlassian.com/jsm/ops/integration/v2"
+	if params != nil {
+		req, err = http.NewRequest("POST", fmt.Sprintf("%s/%s?%s", baseURL, path, params.URLSafe()), bytes.NewReader(requestBody))
+	} else {
+		req, err = http.NewRequest("POST", fmt.Sprintf("%s/%s", baseURL, path), bytes.NewReader(requestBody))
+	}
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
+	req.Header.Add("Content-type", "application/json")
+	req.Header.Add("Accept", "application/json")
+
+	// debug
+	if c.logger != nil && c.logLevel >= LogDebug {
+		c.logReq(req)
+	}
+
+	res, err := httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	// debug
+	if c.logger != nil && c.logLevel >= LogDebug {
+		c.logRes(res)
+	}
+
+	isNotError := false
+
+	for _, status := range expectedStatus {
+		isNotError = res.StatusCode == status
+		if isNotError {
+			break
+		}
+	}
+
+	if !isNotError {
+		body, err := io.ReadAll(res.Body)
+		apiError := ""
+		if err == nil {
+			// 使用 sonic 格式化 JSON
+			var jsonData interface{}
+			if err := sonic.Unmarshal(body, &jsonData); err == nil {
+				if formatted, err := sonic.MarshalIndent(jsonData, "", "\t"); err == nil {
+					apiError = string(formatted)
+				}
+			}
+			if apiError == "" {
+				apiError = string(body)
+			}
+		}
+		if res.StatusCode == http.StatusBadRequest && c.logger != nil {
+			if c.logger != nil {
+				c.logger.Error(apiError)
+			}
+		}
+		return APIError{
+			fmt.Errorf("received status code %d (%d expected)", res.StatusCode, expectedStatus),
+			apiError,
+		}
+	}
+
+	if out != nil {
+		err = sonic.ConfigDefault.NewDecoder(res.Body).Decode(out)
+		return err
 	}
 
 	return nil

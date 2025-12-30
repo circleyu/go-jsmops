@@ -12,7 +12,9 @@ import (
 // APIClient ...
 type APIClient struct {
 	cloudID               string
-	apiKey                string
+	userName              string
+	apiToken              string
+	apiKey                string // Optional, for Integration Events API
 	logLevel              LogLevel
 	logger                *logrus.Logger
 	Alert                 AlertsManager
@@ -42,6 +44,7 @@ type APIClient struct {
 	SyncsActions          SyncsActionsManager
 	SyncsActionGroups     SyncsActionGroupsManager
 	JEC                   JECManager
+	IntegrationEvents     IntegrationEventsManager
 }
 
 type LogLevel int
@@ -70,17 +73,26 @@ func NewOptions() *ClientOptions {
 }
 
 // Init initializes the package
-func Init(cloudID, apiKey string, options *ClientOptions) *APIClient {
+// cloudID: Jira Service Management cloud ID
+// apiToken: API token for Basic Authentication (used for regular APIs)
+// userName: Username/email for Basic Authentication (used for regular APIs)
+// apiKey: Optional API key for Integration Events API (GenieKey). Empty string means Integration Events API is not used.
+func Init(cloudID, apiToken, userName string, apiKey string, options *ClientOptions) *APIClient {
 	client := &APIClient{
-		cloudID: cloudID,
-		apiKey:  apiKey,
+		cloudID:  cloudID,
+		userName: userName,
+		apiToken: apiToken,
+		apiKey:   apiKey,
 	}
 	if options != nil {
 		client.logger = options.Logger
 		client.logLevel = options.Level
 	}
 	if client.logger != nil {
-		client.logger.Infof("JSM ops Client initializing with API Integration...")
+		client.logger.Infof("JSM ops Client initializing..., authorization = Basic Auth (user: %s)", userName)
+		if apiKey != "" {
+			client.logger.Infof("Integration Events API enabled with GenieKey")
+		}
 	}
 
 	client.Alert = newAlertsManager(client)
@@ -110,6 +122,11 @@ func Init(cloudID, apiKey string, options *ClientOptions) *APIClient {
 	client.SyncsActions = newSyncsActionsManager(client)
 	client.SyncsActionGroups = newSyncsActionGroupsManager(client)
 	client.JEC = newJECManager(client)
+
+	// Register Integration Events manager only if apiKey is provided
+	if apiKey != "" {
+		client.IntegrationEvents = newIntegrationEventsManager(client)
+	}
 
 	return client
 }

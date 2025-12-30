@@ -15,6 +15,7 @@ A simple and easy-to-use Go library for calling the Jira Service Management Oper
 ## Supported Resource Categories
 
 - **Alerts** - Alert management
+- **Integration Events** - Integration Events API (create, acknowledge, close alerts, add notes)
 - **Audit Logs** - Audit logs
 - **Contacts** - Contact management
 - **Teams** - Team management
@@ -47,9 +48,22 @@ A simple and easy-to-use Go library for calling the Jira Service Management Oper
 go get github.com/circleyu/go-jsmops/v2@v2.0.0
 ```
 
+## Authentication
+
+This library supports two authentication methods:
+
+1. **Basic Authentication**: For regular APIs (`/jsm/ops/api/{cloudId}/v1/...`)
+   - Uses `userName` (email) and `apiToken` (API Token)
+   - Applies to all standard JSM Operations APIs
+
+2. **API Integration (GenieKey)**: For Integration Events API (`/jsm/ops/integration/v2/...`)
+   - Uses `apiKey` (GenieKey)
+   - Only for Integration Events API (create, acknowledge, close alerts, add notes)
+   - Optional: Pass empty string if you don't need Integration Events API
+
 ## Quick Start
 
-### Basic Usage
+### Basic Usage (Basic Auth Only)
 
 ```go
 package main
@@ -64,7 +78,7 @@ import (
 )
 
 func main() {
-    // Initialize client
+    // Initialize client (Basic Auth only)
     logger := logrus.New()
     logger.SetLevel(logrus.DebugLevel)
     
@@ -75,7 +89,9 @@ func main() {
     
     client := jsmops.Init(
         "your-cloud-id",
-        "your-api-key",
+        "your-api-token",  // API Token for Basic Auth
+        "your-email@example.com",  // Username/Email for Basic Auth
+        "",  // apiKey (empty string means Integration Events API is not used)
         options,
     )
     
@@ -94,12 +110,78 @@ func main() {
 }
 ```
 
+### Using Integration Events API
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    
+    "github.com/circleyu/go-jsmops/v2"
+    "github.com/circleyu/go-jsmops/v2/alert"
+    "github.com/sirupsen/logrus"
+)
+
+func main() {
+    // Initialize client (supports both Basic Auth and Integration Events API)
+    logger := logrus.New()
+    logger.SetLevel(logrus.DebugLevel)
+    
+    options := &jsmops.ClientOptions{
+        Level:  jsmops.LogDebug,
+        Logger: logger,
+    }
+    
+    client := jsmops.Init(
+        "your-cloud-id",
+        "your-api-token",  // API Token for Basic Auth
+        "your-email@example.com",  // Username/Email for Basic Auth
+        "your-genie-key",  // GenieKey for Integration Events API
+        options,
+    )
+    
+    // Use regular API (uses Basic Auth)
+    listReq := &alert.ListAlertsRequest{
+        Limit: 10,
+    }
+    
+    result, err := client.Alert.ListAlerts(listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    fmt.Printf("Found %d alerts\n", len(result.Alerts))
+    
+    // Use Integration Events API (uses GenieKey)
+    createReq := &alert.IntegrationCreateAlertRequest{
+        Message: "CPU usage exceeded 80%",
+        Details: map[string]string{
+            "server": "server-01",
+            "cpu":    "85%",
+        },
+        Priority: alert.P1,
+        Source:   "MonitoringTool",
+    }
+    
+    createResult, err := client.IntegrationEvents.CreateAlert(createReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    fmt.Printf("Alert creation request submitted: %s\n", createResult.RequestID)
+}
+```
+
 ### Without Logging
 
 ```go
 client := jsmops.Init(
     "your-cloud-id",
-    "your-api-key",
+    "your-api-token",
+    "your-email@example.com",
+    "",  // apiKey (empty string means Integration Events API is not used)
     jsmops.EmptyOptions(),
 )
 ```
@@ -117,11 +199,26 @@ Detailed usage examples can be found in the [examples](./examples) directory:
 
 ### Authentication
 
-All API requests use API Integration authentication (GenieKey). You need to provide:
-- `cloudID`: Jira Cloud ID
-- `apiKey`: API Integration API Key
+This library supports two authentication methods:
 
-To obtain an API Key, set up an API Integration in Jira Service Management:
+#### Basic Authentication (for regular APIs)
+
+All standard JSM Operations APIs use Basic Authentication. You need to provide:
+- `cloudID`: Jira Cloud ID
+- `apiToken`: API Token (obtained from [Atlassian Account Settings](https://id.atlassian.com/manage-profile/security/api-tokens))
+- `userName`: Your email address
+
+To obtain an API Token:
+1. Go to [Atlassian Account Settings](https://id.atlassian.com/manage-profile/security/api-tokens)
+2. Click **Create API token**
+3. Copy the generated API Token
+
+#### API Integration (GenieKey) (for Integration Events API)
+
+Integration Events API uses GenieKey authentication. You need to provide:
+- `apiKey`: API Integration API Key (GenieKey)
+
+To obtain a GenieKey, set up an API Integration in Jira Service Management:
 1. Go to your team's Operations page
 2. Select **Integrations** > **Add integration**
 3. Search and select "API"
@@ -129,6 +226,8 @@ To obtain an API Key, set up an API Integration in Jira Service Management:
 5. Copy the generated API Key
 
 The API Key format is a UUID, for example: `g4ff854d-a14c-46a8-b8f0-0960774319dd`
+
+**Note**: If you don't need to use Integration Events API, you can pass an empty string for the `apiKey` parameter.
 
 ### Error Handling
 
