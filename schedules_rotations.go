@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/schedules/rotations"
+	"github.com/circleyu/go-jsmops/v2/schedules/rotations"
 )
 
 type SchedulesRotationsManager interface {

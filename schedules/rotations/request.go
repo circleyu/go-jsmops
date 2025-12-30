@@ -3,7 +3,7 @@ package rotations
 import (
 	"strconv"
 
-	"github.com/circleyu/go-jsmops/params"
+	"github.com/circleyu/go-jsmops/v2/params"
 )
 
 type ListRotationsRequest struct {

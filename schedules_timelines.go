@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/circleyu/go-jsmops/schedules/timelines"
+	"github.com/circleyu/go-jsmops/v2/schedules/timelines"
 )
 
 type SchedulesTimelinesManager interface {

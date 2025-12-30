@@ -3,7 +3,7 @@ package jsmops
 import (
 	"net/http"
 
-	"github.com/circleyu/go-jsmops/teams"
+	"github.com/circleyu/go-jsmops/v2/teams"
 )
 
 type TeamsManager interface {

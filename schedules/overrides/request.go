@@ -3,7 +3,7 @@ package overrides
 import (
 	"strconv"
 
-	"github.com/circleyu/go-jsmops/params"
+	"github.com/circleyu/go-jsmops/v2/params"
 )
 
 type ListOverridesRequest struct {

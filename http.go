@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/params"
+	"github.com/circleyu/go-jsmops/v2/params"
 )
 
 const httpClientTimeout = time.Second * 30

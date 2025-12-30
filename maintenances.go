@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/maintenances"
+	"github.com/circleyu/go-jsmops/v2/maintenances"
 )
 
 type MaintenancesManager interface {

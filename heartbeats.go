@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/heartbeats"
-	"github.com/circleyu/go-jsmops/params"
+	"github.com/circleyu/go-jsmops/v2/heartbeats"
+	"github.com/circleyu/go-jsmops/v2/params"
 )
 
 type HeartbeatsManager interface {

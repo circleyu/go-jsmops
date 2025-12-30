@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/teams/policies"
+	"github.com/circleyu/go-jsmops/v2/teams/policies"
 )
 
 type TeamPoliciesManager interface {

@@ -1,7 +1,7 @@
 package alert
 
 import (
-	"github.com/circleyu/go-jsmops/params"
+	"github.com/circleyu/go-jsmops/v2/params"
 	"github.com/pkg/errors"
 )
 

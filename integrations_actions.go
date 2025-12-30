@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/integrations/actions"
+	"github.com/circleyu/go-jsmops/v2/integrations/actions"
 )
 
 type IntegrationActionsManager interface {

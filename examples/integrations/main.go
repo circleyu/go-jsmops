@@ -5,10 +5,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/circleyu/go-jsmops"
-	"github.com/circleyu/go-jsmops/integrations"
-	"github.com/circleyu/go-jsmops/integrations/actions"
-	"github.com/circleyu/go-jsmops/integrations/filters"
+	"github.com/circleyu/go-jsmops/v2"
+	"github.com/circleyu/go-jsmops/v2/integrations"
+	"github.com/circleyu/go-jsmops/v2/integrations/actions"
+	"github.com/circleyu/go-jsmops/v2/integrations/filters"
 	"github.com/sirupsen/logrus"
 )
 

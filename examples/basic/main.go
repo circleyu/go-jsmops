@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/circleyu/go-jsmops"
-	"github.com/circleyu/go-jsmops/contacts"
-	"github.com/circleyu/go-jsmops/teams"
+	"github.com/circleyu/go-jsmops/v2"
+	"github.com/circleyu/go-jsmops/v2/contacts"
+	"github.com/circleyu/go-jsmops/v2/teams"
 	"github.com/sirupsen/logrus"
 )
 

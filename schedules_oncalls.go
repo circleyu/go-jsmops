@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/circleyu/go-jsmops/schedules/oncalls"
+	"github.com/circleyu/go-jsmops/v2/schedules/oncalls"
 )
 
 type SchedulesOnCallsManager interface {

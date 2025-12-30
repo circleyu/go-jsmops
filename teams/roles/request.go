@@ -1,7 +1,7 @@
 package roles
 
 import (
-	"github.com/circleyu/go-jsmops/params"
+	"github.com/circleyu/go-jsmops/v2/params"
 )
 
 type ListTeamRolesRequest struct {

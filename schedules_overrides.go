@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/schedules/overrides"
+	"github.com/circleyu/go-jsmops/v2/schedules/overrides"
 )
 
 type SchedulesOverridesManager interface {

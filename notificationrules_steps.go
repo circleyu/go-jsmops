@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/notificationrules/steps"
+	"github.com/circleyu/go-jsmops/v2/notificationrules/steps"
 )
 
 type NotificationRuleStepsManager interface {

@@ -44,7 +44,7 @@ A simple and easy-to-use Go library for calling the Jira Service Management Oper
 ## Installation
 
 ```bash
-go get github.com/circleyu/go-jsmops
+go get github.com/circleyu/go-jsmops/v2@v2.0.0
 ```
 
 ## Quick Start
@@ -58,8 +58,8 @@ import (
     "fmt"
     "log"
     
-    "github.com/circleyu/go-jsmops"
-    "github.com/circleyu/go-jsmops/alert"
+    "github.com/circleyu/go-jsmops/v2"
+    "github.com/circleyu/go-jsmops/v2/alert"
     "github.com/sirupsen/logrus"
 )
 

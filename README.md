@@ -44,7 +44,7 @@
 ## 安裝
 
 ```bash
-go get github.com/circleyu/go-jsmops
+go get github.com/circleyu/go-jsmops/v2@v2.0.0
 ```
 
 ## 快速開始
@@ -58,8 +58,8 @@ import (
     "fmt"
     "log"
     
-    "github.com/circleyu/go-jsmops"
-    "github.com/circleyu/go-jsmops/alert"
+    "github.com/circleyu/go-jsmops/v2"
+    "github.com/circleyu/go-jsmops/v2/alert"
     "github.com/sirupsen/logrus"
 )
 

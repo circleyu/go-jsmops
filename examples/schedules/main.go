@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/circleyu/go-jsmops"
-	"github.com/circleyu/go-jsmops/schedules"
-	"github.com/circleyu/go-jsmops/schedules/oncalls"
+	"github.com/circleyu/go-jsmops/v2"
+	"github.com/circleyu/go-jsmops/v2/schedules"
+	"github.com/circleyu/go-jsmops/v2/schedules/oncalls"
 	"github.com/sirupsen/logrus"
 )
 

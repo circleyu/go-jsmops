@@ -1,4 +1,4 @@
-module github.com/circleyu/go-jsmops
+module github.com/circleyu/go-jsmops/v2
 
 go 1.25.5
 

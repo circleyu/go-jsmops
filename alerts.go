@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/alert"
+	"github.com/circleyu/go-jsmops/v2/alert"
 )
 
 type AlertsManager interface {

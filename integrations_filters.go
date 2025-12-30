@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/integrations/filters"
+	"github.com/circleyu/go-jsmops/v2/integrations/filters"
 )
 
 type IntegrationFiltersManager interface {

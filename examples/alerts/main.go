@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/circleyu/go-jsmops"
-	"github.com/circleyu/go-jsmops/alert"
+	"github.com/circleyu/go-jsmops/v2"
+	"github.com/circleyu/go-jsmops/v2/alert"
 	"github.com/sirupsen/logrus"
 )
 

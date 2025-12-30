@@ -1,7 +1,7 @@
 package jsmops
 
 import (
-	"github.com/circleyu/go-jsmops/auditlogs"
+	"github.com/circleyu/go-jsmops/v2/auditlogs"
 )
 
 type AuditLogsManager interface {

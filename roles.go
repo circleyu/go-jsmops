@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bytedance/sonic"
-	"github.com/circleyu/go-jsmops/roles"
+	"github.com/circleyu/go-jsmops/v2/roles"
 )
 
 type RolesManager interface {
