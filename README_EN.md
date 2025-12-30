@@ -75,8 +75,7 @@ func main() {
     
     client := jsmops.Init(
         "your-cloud-id",
-        "your-api-token",
-        "your-username",
+        "your-api-key",
         options,
     )
     
@@ -100,8 +99,7 @@ func main() {
 ```go
 client := jsmops.Init(
     "your-cloud-id",
-    "your-api-token",
-    "your-username",
+    "your-api-key",
     jsmops.EmptyOptions(),
 )
 ```
@@ -119,10 +117,18 @@ Detailed usage examples can be found in the [examples](./examples) directory:
 
 ### Authentication
 
-All API requests use Basic Authentication. You need to provide:
+All API requests use API Integration authentication (GenieKey). You need to provide:
 - `cloudID`: Jira Cloud ID
-- `apiToken`: Jira API Token
-- `userName`: Jira username or email
+- `apiKey`: API Integration API Key
+
+To obtain an API Key, set up an API Integration in Jira Service Management:
+1. Go to your team's Operations page
+2. Select **Integrations** > **Add integration**
+3. Search and select "API"
+4. Enter an integration name and complete the setup
+5. Copy the generated API Key
+
+The API Key format is a UUID, for example: `g4ff854d-a14c-46a8-b8f0-0960774319dd`
 
 ### Error Handling
 

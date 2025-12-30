@@ -12,8 +12,7 @@ import (
 // APIClient ...
 type APIClient struct {
 	cloudID               string
-	userName              string
-	apiToken              string
+	apiKey                string
 	logLevel              LogLevel
 	logger                *logrus.Logger
 	Alert                 AlertsManager
@@ -71,18 +70,17 @@ func NewOptions() *ClientOptions {
 }
 
 // Init initializes the package
-func Init(cloudID, apiToken, userName string, options *ClientOptions) *APIClient {
+func Init(cloudID, apiKey string, options *ClientOptions) *APIClient {
 	client := &APIClient{
-		cloudID:  cloudID,
-		userName: userName,
-		apiToken: apiToken,
+		cloudID: cloudID,
+		apiKey:  apiKey,
 	}
 	if options != nil {
 		client.logger = options.Logger
 		client.logLevel = options.Level
 	}
 	if client.logger != nil {
-		client.logger.Infof("JSM ops Client initializing..., authorization = %s", userName)
+		client.logger.Infof("JSM ops Client initializing with API Integration...")
 	}
 
 	client.Alert = newAlertsManager(client)

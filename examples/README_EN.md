@@ -10,8 +10,7 @@ Before running the examples, please set the following environment variables:
 
 ```bash
 export JIRA_CLOUD_ID="your-cloud-id"
-export JIRA_API_TOKEN="your-api-token"
-export JIRA_USERNAME="your-username@example.com"
+export JIRA_API_KEY="your-api-key"
 ```
 
 ### Getting Jira Cloud ID
@@ -21,11 +20,15 @@ export JIRA_USERNAME="your-username@example.com"
 3. Select your organization
 4. Find the Cloud ID in the settings
 
-### Getting API Token
+### Getting API Key
 
-1. Visit `https://id.atlassian.com/manage-profile/security/api-tokens`
-2. Click "Create API token"
-3. Copy the generated token
+1. Go to your team's Operations page
+2. Select **Integrations** > **Add integration**
+3. Search and select "API"
+4. Enter an integration name and complete the setup
+5. Copy the generated API Key
+
+The API Key format is a UUID, for example: `g4ff854d-a14c-46a8-b8f0-0960774319dd`
 
 ## Example Descriptions
 

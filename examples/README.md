@@ -10,8 +10,7 @@
 
 ```bash
 export JIRA_CLOUD_ID="your-cloud-id"
-export JIRA_API_TOKEN="your-api-token"
-export JIRA_USERNAME="your-username@example.com"
+export JIRA_API_KEY="your-api-key"
 ```
 
 ### 獲取 Jira Cloud ID
@@ -21,11 +20,15 @@ export JIRA_USERNAME="your-username@example.com"
 3. 選擇您的組織
 4. 在設置中找到 Cloud ID
 
-### 獲取 API Token
+### 獲取 API Key
 
-1. 訪問 `https://id.atlassian.com/manage-profile/security/api-tokens`
-2. 點擊「Create API token」
-3. 複製生成的 token
+1. 前往團隊的 Operations 頁面
+2. 選擇 **Integrations** > **Add integration**
+3. 搜索並選擇 "API"
+4. 輸入整合名稱並完成設置
+5. 複製生成的 API Key
+
+API Key 格式為 UUID，例如：`g4ff854d-a14c-46a8-b8f0-0960774319dd`
 
 ## 範例說明
 

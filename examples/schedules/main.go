@@ -14,11 +14,10 @@ import (
 func main() {
 	// 從環境變數獲取認證信息
 	cloudID := os.Getenv("JIRA_CLOUD_ID")
-	apiToken := os.Getenv("JIRA_API_TOKEN")
-	userName := os.Getenv("JIRA_USERNAME")
+	apiKey := os.Getenv("JIRA_API_KEY")
 
-	if cloudID == "" || apiToken == "" || userName == "" {
-		log.Fatal("請設置環境變數: JIRA_CLOUD_ID, JIRA_API_TOKEN, JIRA_USERNAME")
+	if cloudID == "" || apiKey == "" {
+		log.Fatal("請設置環境變數: JIRA_CLOUD_ID, JIRA_API_KEY")
 	}
 
 	// 初始化客戶端
@@ -30,7 +29,7 @@ func main() {
 		Logger: logger,
 	}
 
-	client := jsmops.Init(cloudID, apiToken, userName, options)
+	client := jsmops.Init(cloudID, apiKey, options)
 
 	// 範例 1: 列出所有排程
 	fmt.Println("=== 列出所有排程 ===")

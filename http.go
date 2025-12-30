@@ -34,7 +34,7 @@ func (c *APIClient) post(path string, body io.Reader, out interface{}, params *p
 		return err
 	}
 
-	req.SetBasicAuth(c.userName, c.apiToken)
+	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -106,7 +106,7 @@ func (c *APIClient) put(path string, requestBody []byte, out interface{}, expect
 	}
 	req, _ := http.NewRequest(http.MethodPut, fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", c.cloudID, path), bytes.NewReader(requestBody))
 
-	req.SetBasicAuth(c.userName, c.apiToken)
+	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -183,7 +183,7 @@ func (c *APIClient) get(path string, out interface{}, params *params.Params) (ht
 		return nil, err
 	}
 
-	req.SetBasicAuth(c.userName, c.apiToken)
+	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -217,7 +217,7 @@ func (c *APIClient) getFile(path string) (*bytes.Reader, error) {
 		return nil, err
 	}
 
-	req.SetBasicAuth(c.userName, c.apiToken)
+	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -256,7 +256,7 @@ func (c *APIClient) patch(path string, requestBody []byte, out interface{}, expe
 	}
 	req, _ := http.NewRequest(http.MethodPatch, fmt.Sprintf("https://api.atlassian.com/jsm/ops/api/%s/%s", c.cloudID, path), bytes.NewReader(requestBody))
 
-	req.SetBasicAuth(c.userName, c.apiToken)
+	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
@@ -336,7 +336,7 @@ func (c *APIClient) delete(path string, requestBody []byte, expectedStatus ...in
 		return err
 	}
 
-	req.SetBasicAuth(c.userName, c.apiToken)
+	req.Header.Set("Authorization", "GenieKey "+c.apiKey)
 	req.Header.Add("Content-type", "application/json")
 	req.Header.Add("X-ExperimentalApi", "opt-in")
 
