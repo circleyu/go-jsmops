@@ -5,13 +5,13 @@ import "time"
 type Alert struct {
 	Seen            bool                   `json:"seen,omitempty"`
 	Id              string                 `json:"id,omitempty"`
-	TinyID          string                 `json:"tinyId,omitempty"`
-	Alias           string                 `json:"alias,omitempty"`
-	Message         string                 `json:"message,omitempty"`
-	Status          string                 `json:"status,omitempty"`
+	TinyID          string                 `json:"tinyId"`
+	Alias           string                 `json:"alias"`
+	Message         string                 `json:"message"`
+	Status          string                 `json:"status"`
 	Acknowledged    bool                   `json:"acknowledged,omitempty"`
 	IsSeen          bool                   `json:"isSeen,omitempty"`
-	Tags            []string               `json:"tags,omitempty"`
+	Tags            []string               `json:"tags"`
 	Snoozed         bool                   `json:"snoozed,omitempty"`
 	SnoozedUntil    time.Time              `json:"snoozedUntil,omitempty"`
 	Count           int                    `json:"count,omitempty"`
@@ -19,16 +19,16 @@ type Alert struct {
 	CreatedAt       time.Time              `json:"createdAt,omitempty"`
 	UpdatedAt       time.Time              `json:"updatedAt,omitempty"`
 	Source          string                 `json:"source,omitempty"`
-	Owner           string                 `json:"owner,omitempty"`
-	Priority        Priority               `json:"priority,omitempty"`
+	Owner           string                 `json:"owner"`
+	Priority        Priority               `json:"priority"`
 	Responders      []Responder            `json:"responders"`
 	Integration     Integration            `json:"integration,omitempty"`
 	Report          Report                 `json:"report,omitempty"`
 	OwnerTeamID     string                 `json:"ownerTeamId,omitempty"`
 	Entity          string                 `json:"entity,omitempty"`
-	Description     string                 `json:"description,omitempty"`
+	Description     string                 `json:"description"`
 	Actions         []string               `json:"actions,omitempty"`
-	ExtraProperties map[string]interface{} `json:"extraProperties,omitempty"`
+	ExtraProperties map[string]interface{} `json:"extraProperties"`
 	IntegrationType string                 `json:"integrationType,omitempty"`
 	IntegrationName string                 `json:"integrationName,omitempty"`
 }
